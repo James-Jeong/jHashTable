@@ -93,24 +93,19 @@ DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 
 	int nodeIndex = 0;
 	int listSize = (*container)->size;
-	JNodePtr head = (*container)->head;
-	JNodePtr tail = (*container)->tail;
-	
-	if(head != NULL && tail != NULL)
+		
+	JNodePtr node = (*container)->head->next;
+	while(node != (*container)->tail)
 	{
-		JNodePtr node = head->next;
-		while(node != tail)
-		{
-			JNodePtr tempNode = node;
-			node->next->prev = node->prev;
-			node->prev->next = node->next;
-			node = node->next;
-			if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
-		}
-
-		if(DeleteJNode(&head) == DeleteFail) return DeleteFail;
-		if(DeleteJNode(&tail) == DeleteFail) return DeleteFail;
+		JNodePtr tempNode = node;
+		node->next->prev = node->prev;
+		node->prev->next = node->next;
+		node = node->next;
+		if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
 	}
+
+	if(DeleteJNode(&((*container)->head)) == DeleteFail) return DeleteFail;
+	if(DeleteJNode(&((*container)->tail)) == DeleteFail) return DeleteFail;
 
 	free(*container);
 	*container = NULL;
@@ -168,19 +163,59 @@ JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 	return list;
 }
 
-void* JLinkedListGetFirstNodeData(JLinkedListPtr list)
+void* JLinkedListGetFirstData(JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->head->next == list->tail) return NULL;
 	return JNodeGetData(list->head->next);
 }
 
-void* JLinkedListGetLastNodeData(JLinkedListPtr list)
+void* JLinkedListGetLastData(JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->tail->prev == list->head) return NULL;
 
 	return JNodeGetData(list->tail->prev);
+}
+
+DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+{
+	if(list == NULL || data == NULL) return DeleteFail;
+
+	JNodePtr node = list->head->next;
+	while(node != list->tail)
+	{
+		if(node->data == data)
+		{
+			node->next->prev = node->prev;
+			node->prev->next = node->next;
+			JNodePtr tempNode = node;
+			if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
+			break;
+		}
+		node = node->next;
+	}
+
+	return DeleteSuccess;
+}
+
+FindResult JLinkedListFindData(JLinkedListPtr list, void *data)
+{
+	if(list == NULL || data == NULL) return FindFail;
+
+	FindResult result = FindFail;
+	JNodePtr node = list->head->next;
+	while(node != list->tail)
+	{
+		if(node->data == data)
+		{
+			result = FindSuccess;
+			break;
+		}
+		node = node->next;
+	}
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,6 +300,21 @@ int JHashTableGetSize(const JHashTablePtr table)
 	return table->size;
 }
 
+JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
+{
+	if(table == NULL) return NULL;
+	switch(type)
+	{
+		case IntType: break;
+		case CharType: break; 
+		case StringType: break;
+		default: return NULL;
+	}
+
+	table->type = type;
+	return table;
+}
+
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
 {
 	if(table == NULL || data == NULL) return NULL;
@@ -309,7 +359,7 @@ void* JHashTableGetFirstData(JHashTablePtr table)
 
 	for( ; tableIndex < tableSize; tableIndex++)
 	{
-		data = JLinkedListGetFirstNodeData(table->listContainer[tableIndex]);
+		data = JLinkedListGetFirstData(table->listContainer[tableIndex]);
 		if(data != NULL) break;
 	}
 
@@ -325,12 +375,32 @@ void* JHashTableGetLastData(JHashTablePtr table)
 
 	for( ; tableIndex >= 0; tableIndex--)
 	{
-		data = JLinkedListGetLastNodeData(table->listContainer[tableIndex]);
+		data = JLinkedListGetLastData(table->listContainer[tableIndex]);
 		if(data != NULL) break;
 	}
 
 	return data;
 }
+
+DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
+{
+	if(table == NULL || data == NULL) return DeleteFail;
+
+	int tableSize = table->size;
+	int tableIndex = 0;
+	DeleteResult result = DeleteFail;
+
+	for( ; tableIndex < tableSize; tableIndex++)
+	{
+		if(JLinkedListDeleteData(table->listContainer[tableIndex], data) == DeleteSuccess) {
+			result = DeleteSuccess;
+			break;
+		}
+	}
+
+	return result;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Static Functions

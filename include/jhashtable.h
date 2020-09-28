@@ -93,11 +93,11 @@ int JLinkedListGetSize(const JLinkedListPtr list);
 void* JLinkedListGetData(const JLinkedListPtr list);
 void* JLinkedListSetData(const JLinkedListPtr list, void *data);
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data);
-void* JLinkedListGetFirstNodeData(JLinkedListPtr list);
-void* JLinkedListGetLastNodeData(JLinkedListPtr list);
+void* JLinkedListGetFirstData(JLinkedListPtr list);
+void* JLinkedListGetLastData(JLinkedListPtr list);
 
-//DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data);
-//FindResult JLinkedListFindData(JLinkedListPtr list, void *data);
+DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data);
+FindResult JLinkedListFindData(JLinkedListPtr list, void *data);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JHashTable
@@ -107,16 +107,17 @@ JHashTablePtr NewJHashTable(int size, HashType type);
 DeleteResult DeleteJHashTable(JHashTablePtrContainer container);
 
 int JHashTableGetSize(const JHashTablePtr table);
+JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type);
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data);
 
 void* JHashTableGetFirstData(JHashTablePtr table);
 void* JHashTableGetLastData(JHashTablePtr table);
-//DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data);
+DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data);
 //DeleteResult JHashTableDeleteFirstData(JHashTablePtr table);
 //DeleteResult JHashTableDeleteLastData(JHashTablePtr table);
 //FindResult JHashTableFindData(JHashTablePtr table, void *data);
 
-//JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util Functions
