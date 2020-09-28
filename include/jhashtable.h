@@ -45,7 +45,7 @@ typedef enum HashType
 
 typedef int (*_jhashInt_f)(int key, int hashSize);
 typedef int (*_jhashChar_f)(char key, int hashSize);
-typedef int (*_jhashString_f)(char* key, int hashSize);
+typedef int (*_jhashString_f)(const char* key, int hashSize);
 
 // Linked List 에서 data 를 관리하기 위한 노드 구조체
 typedef struct _jnode_t {
@@ -91,13 +91,13 @@ JLinkedListPtr NewJLinkedList(int index);
 DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container);
 int JLinkedListGetSize(const JLinkedListPtr list);
 void* JLinkedListGetData(const JLinkedListPtr list);
-void* JLinkedListSetData(const JLinkedListPtr list, void *data);
+void* JLinkedListSetData(JLinkedListPtr list, void *data);
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data);
-void* JLinkedListGetFirstData(JLinkedListPtr list);
-void* JLinkedListGetLastData(JLinkedListPtr list);
+void* JLinkedListGetFirstData(const JLinkedListPtr list);
+void* JLinkedListGetLastData(const JLinkedListPtr list);
 
 DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data);
-FindResult JLinkedListFindData(JLinkedListPtr list, void *data);
+FindResult JLinkedListFindData(const JLinkedListPtr list, void *data);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JHashTable
@@ -110,12 +110,12 @@ int JHashTableGetSize(const JHashTablePtr table);
 JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type);
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data);
 
-void* JHashTableGetFirstData(JHashTablePtr table);
-void* JHashTableGetLastData(JHashTablePtr table);
+void* JHashTableGetFirstData(const JHashTablePtr table);
+void* JHashTableGetLastData(const JHashTablePtr table);
 DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data);
 //DeleteResult JHashTableDeleteFirstData(JHashTablePtr table);
 //DeleteResult JHashTableDeleteLastData(JHashTablePtr table);
-//FindResult JHashTableFindData(JHashTablePtr table, void *data);
+//FindResult JHashTableFindData(const JHashTablePtr table, void *data);
 
 
 

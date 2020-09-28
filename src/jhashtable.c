@@ -10,12 +10,17 @@
 
 static int HashInt(int key, int hashSize);
 static int HashChar(char key, int hashSize);
-static int HashString(char* key, int hashSize);
+static int HashString(const char* key, int hashSize);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JNode
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @fn JNodePtr NewJNode()
+ * @brief 새로운 노드 구조체 객체를 생성하는 함수
+ * @return 성공 시 생성된 노드 구조체 객체의 주소, 실패 시 NULL 반환
+ */
 JNodePtr NewJNode()
 {
 	JNodePtr newNode = (JNodePtr)malloc(sizeof(JNode));
@@ -27,6 +32,12 @@ JNodePtr NewJNode()
 	return newNode;
 }
 
+/**
+ * @fn DeleteResult DeleteJNode(JNodePtrContainer container)
+ * @brief 노드 구조체 객체를 삭제하는 함수
+ * @param container 노드 구조체 객체의 주소를 저장한 이중 포인터, 컨테이너 변수(입력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
 DeleteResult DeleteJNode(JNodePtrContainer container)
 {
 	if(container == NULL || *container == NULL) return DeleteFail;
@@ -35,12 +46,25 @@ DeleteResult DeleteJNode(JNodePtrContainer container)
 	return DeleteSuccess;
 }
 
+/**
+ * @fn void* JNodeGetData(const JNodePtr node)
+ * @brief 노드에 저장된 데이터의 주소를 반환하는 함수
+ * @param node 노드 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 저장된 데이터의 주소, 실패 시 NULL 반환
+ */
 void* JNodeGetData(const JNodePtr node)
 {
 	if(node == NULL) return NULL;
 	return node->data;
 }
 
+/**
+ * @fn void* JNodeSetData(JNodePtr node, void *data)
+ * @brief 노드에 데이터의 주소를 저장하는 함수
+ * @param node 노드 구조체 객체의 주소(출력)
+ * @param data 저장할 데이터의 주소(입력)
+ * @return 성공 시 저장된 데이터의 주소, 실패 시 NULL 반환
+ */
 void* JNodeSetData(JNodePtr node, void *data)
 {
 	if(node == NULL || data == NULL) return NULL;
@@ -52,6 +76,12 @@ void* JNodeSetData(JNodePtr node, void *data)
 // Functions for JLinkedList
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @fn JLinkedListPtr NewJLinkedList(int index)
+ * @brief 새로운 연결 리스트 구조체 객체를 생성하는 함수
+ * @param index 해쉬 테이블에서 관리하는 연결 리스트의 인덱스 번호(입력)
+ * @return 성공 시 생성된 연결 리스트 구조체 객체의 주소, 실패 시 NULL 반환
+ */
 JLinkedListPtr NewJLinkedList(int index)
 {
 	JLinkedListPtr newList = (JLinkedListPtr)malloc(sizeof(JLinkedList));
@@ -87,6 +117,12 @@ JLinkedListPtr NewJLinkedList(int index)
 	return newList;
 }
 
+/**
+ * @fn DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
+ * @brief 연결 리스트 구조체 객체를 삭제하는 함수
+ * @param container 연결 리스트 구조체 객체의 주소를 저장한 이중 포인터, 컨테이너 변수(입력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
 DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 {
 	if(container == NULL || *container == NULL) return DeleteFail;
@@ -113,25 +149,51 @@ DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 	return DeleteSuccess;
 }
 
+/**
+ * @fn int JLinkedListGetSize(const JLinkedListPtr list)
+ * @brief 연결 리스트의 전체 크기를 반환하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 연결 리스트의 전체 크기, 실패 시 -1 반환
+ */
 int JLinkedListGetSize(const JLinkedListPtr list)
 {
 	if(list == NULL) return -1;
 	return list->size;
 }
 
+/**
+ * @fn void* JLinkedListGetData(const JLinkedListPtr list)
+ * @brief 연결 리스트에 저장된 데이터의 주소를 반환하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 저장된 데이터의 주소, 실패 시 NULL 반환
+ */
 void* JLinkedListGetData(const JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	return list->data;
 }
 
-void* JLinkedListSetData(const JLinkedListPtr list, void *data)
+/**
+ * @fn void* JLinkedListSetData(const JLinkedListPtr list, void *data)
+ * @brief 연결 리스트에 데이터의 주소를 저장하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(출력)
+ * @param data 저장할 데이터의 주소(입력)
+ * @return 성공 시 저장된 데이터의 주소, 실패 시 NULL 반환
+ */
+void* JLinkedListSetData(JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return NULL;
 	list->data = data;
 	return list->data;
 }
 
+/**
+ * @fn void* JLinkedListSetData(const JLinkedListPtr list, void *data)
+ * @brief 연결 리스트에 새로운 노드를 추가하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(출력)
+ * @param data 저장할 노드의 데이터 주소(입력)
+ * @return 성공 시 연결 리스트 구조체의 주소, 실패 시 NULL 반환
+ */
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return NULL;
@@ -163,14 +225,26 @@ JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 	return list;
 }
 
-void* JLinkedListGetFirstData(JLinkedListPtr list)
+/**
+ * @fn void* JLinkedListGetFirstData(const JLinkedListPtr list)
+ * @brief 연결 리스트에 저장된 첫 번째 노드의 데이터를 반환하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 첫 번째 노드의 데이터의 주소, 실패 시 NULL 반환
+ */
+void* JLinkedListGetFirstData(const JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->head->next == list->tail) return NULL;
 	return JNodeGetData(list->head->next);
 }
 
-void* JLinkedListGetLastData(JLinkedListPtr list)
+/**
+ * @fn void* JLinkedListGetLastData(const JLinkedListPtr list)
+ * @brief 연결 리스트에 저장된 마지막 노드의 데이터를 반환하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 마지막 노드의 데이터의 주소, 실패 시 NULL 반환
+ */
+void* JLinkedListGetLastData(const JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->tail->prev == list->head) return NULL;
@@ -178,6 +252,13 @@ void* JLinkedListGetLastData(JLinkedListPtr list)
 	return JNodeGetData(list->tail->prev);
 }
 
+/**
+ * @fn DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+ * @brief 연결 리스트에 저장된 데이터를 삭제하는 함수
+ * @param list 연결 리스트 구조체 객체의 주소(츨력)
+ * @param data 삭제할 데이터의 주소(입력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
 DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return DeleteFail;
@@ -199,7 +280,15 @@ DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
 	return DeleteSuccess;
 }
 
-FindResult JLinkedListFindData(JLinkedListPtr list, void *data)
+/**
+ * @fn DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+ * @brief 연결 리스트에 저장된 데이터를 검색하는 함수
+ * 데이터 검색 후 데이터는 반환하지 않고 존재 유무만 반환한다.
+ * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
+ * @param data 검색할 데이터의 주소(입력)
+ * @return 성공 시 FindSuccess, 실패 시 FindFail 반환(FindResult 열거형 참고)
+ */
+FindResult JLinkedListFindData(const JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return FindFail;
 
@@ -294,12 +383,25 @@ DeleteResult DeleteJHashTable(JHashTablePtrContainer container)
 	return DeleteSuccess;
 }
 
+/**
+ * @fn int JHashTableGetSize(const JHashTablePtr table)
+ * @brief 해쉬 테이블의 전체 크기를 반환하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 해쉬 테이블의 전체 크기, 실패 시 -1 반환
+ */
 int JHashTableGetSize(const JHashTablePtr table)
 {
 	if(table == NULL) return -1;
 	return table->size;
 }
 
+/**
+ * @fn JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
+ * @brief 해쉬 테이블의 해쉬 유형을 변경하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(출력)
+ * @param type 변경할 해쉬 유형(입력, HashType 열거형 참고)
+ * @return 성공 시 해쉬 테이블 구조체의 주소, 실패 시 NULL 반환
+ */
 JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
 {
 	if(table == NULL) return NULL;
@@ -315,6 +417,13 @@ JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
 	return table;
 }
 
+/**
+ * @fn JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
+ * @brief 해쉬 테이블에 새로운 데이터를 추가하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(출력)
+ * @param data 저장할 데이터의 주소(입력)
+ * @return 성공 시 해쉬 테이블 구조체의 주소, 실패 시 NULL 반환
+ */
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
 {
 	if(table == NULL || data == NULL) return NULL;
@@ -349,7 +458,13 @@ JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
 	return table;
 }
 
-void* JHashTableGetFirstData(JHashTablePtr table)
+/**
+ * @fn void* JHashTableGetFirstData(const JHashTablePtr table)
+ * @brief 해쉬 테이블에 저장된 첫 번째 데이터를 반환하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 첫 번째 데이터의 주소, 실패 시 NULL 반환
+ */
+void* JHashTableGetFirstData(const JHashTablePtr table)
 {
 	if(table == NULL) return NULL;
 
@@ -366,7 +481,13 @@ void* JHashTableGetFirstData(JHashTablePtr table)
 	return data;
 }
 
-void* JHashTableGetLastData(JHashTablePtr table)
+/**
+ * @fn void* JHashTableGetLastData(const JHashTablePtr table)
+ * @brief 해쉬 테이블에 저장된 마지막 데이터를 반환하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 마지막 데이터의 주소, 실패 시 NULL 반환
+ */
+void* JHashTableGetLastData(const JHashTablePtr table)
 {
 	if(table == NULL) return NULL;
 
@@ -382,6 +503,13 @@ void* JHashTableGetLastData(JHashTablePtr table)
 	return data;
 }
 
+/**
+ * @fn DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
+ * @brief 해쉬 테이블에 저장된 데이터를 삭제하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(츨력)
+ * @param data 삭제할 데이터의 주소(입력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
 DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
 {
 	if(table == NULL || data == NULL) return DeleteFail;
@@ -406,11 +534,25 @@ DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
 /// Static Functions
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @fn static int HashInt(int key, int hashSize)
+ * @brief int 형 정수값을 해쉬 테이블의 크기로 해싱한 값을 반환하는 함수
+ * @param key 해싱할 int 형 정수(입력)
+ * @param hashSize 해쉬 테이블의 전체 크기(입력)
+ * @return 항상 해싱된 값 반환
+ */
 static int HashInt(int key, int hashSize)
 {
 	return key % hashSize;
 }
 
+/**
+ * @fn static int HashChar(char key, int hashSize)
+ * @brief char 형 문자를 해쉬 테이블의 크기로 해싱한 값을 반환하는 함수
+ * @param key 해싱할 char 형 문자(입력)
+ * @param hashSize 해쉬 테이블의 전체 크기(입력)
+ * @return 항상 해싱된 값 반환
+ */
 static int HashChar(char key, int hashSize)
 {
 	int value = 0;
@@ -422,7 +564,14 @@ static int HashChar(char key, int hashSize)
 	return value % hashSize;
 }
 
-static int HashString(char* key, int hashSize)
+/**
+ * @fn static int HashString(const char* key, int hashSize)
+ * @brief char* 형 문자열을 해쉬 테이블의 크기로 해싱한 값을 반환하는 함수
+ * @param key 해싱할 char* 형 문자열(입력, 읽기 전용)
+ * @param hashSize 해쉬 테이블의 전체 크기(입력)
+ * @return 항상 해싱된 값 반환
+ */
+static int HashString(const char* key, int hashSize)
 {
 	int value = 0;
 	int hashIndex = 1;
