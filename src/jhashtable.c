@@ -5,13 +5,12 @@
 #include "../include/jhashtable.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Static Definition
-////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////
 /// Predefinition of Static Functions
 ////////////////////////////////////////////////////////////////////////////////
+
+static int HashInt(int key, int hashSize);
+static int HashChar(char key, int hashSize);
+static int HashString(char* key, int hashSize);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JNode
@@ -24,20 +23,28 @@ JNodePtr NewJNode()
 	{
 		return NULL;
 	}
-
 	newNode->data = NULL;
-
 	return newNode;
 }
 
-void DeleteJNode(JNodePtrContainer container)
+DeleteResult DeleteJNode(JNodePtrContainer container)
 {
+	if(container == NULL || *container == NULL) return DeleteFail;
 	free(*container);
 	*container = NULL;
+	return DeleteSuccess;
 }
 
 void* JNodeGetData(const JNodePtr node)
 {
+	if(node == NULL) return NULL;
+	return node->data;
+}
+
+void* JNodeSetData(JNodePtr node, void *data)
+{
+	if(node == NULL || data == NULL) return NULL;
+	node->data = data;
 	return node->data;
 }
 
@@ -45,16 +52,13 @@ void* JNodeGetData(const JNodePtr node)
 // Functions for JLinkedList
 ///////////////////////////////////////////////////////////////////////////////
 
-JLinkedListPtr NewJLinkedList()
+JLinkedListPtr NewJLinkedList(int index)
 {
 	JLinkedListPtr newList = (JLinkedListPtr)malloc(sizeof(JLinkedList));
 	if(newList == NULL)
 	{
 		return NULL;
 	}
-
-	newList->index = 0;
-	newList->size = 0;
 
 	newList->head = NewJNode();
 	if(newList->head == NULL)
@@ -71,38 +75,112 @@ JLinkedListPtr NewJLinkedList()
 		return NULL;
 	}
 
+	newList->head->next = newList->tail;
+	newList->head->prev = NULL;
+	newList->tail->prev = newList->head;
+	newList->tail->next = NULL;
+
+	newList->index = index;
+	newList->size = 0;
 	newList->data = NULL;
 
 	return newList;
 }
 
-void DeleteJLinkedList(JLinkedListPtrContainer container)
+DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 {
+	if(container == NULL || *container == NULL) return DeleteFail;
+
 	int nodeIndex = 0;
 	int listSize = (*container)->size;
-	JNodePtr node = (*container)->head;
-
-	for( ; nodeIndex < listSize; nodeIndex++)
+	JNodePtr head = (*container)->head;
+	JNodePtr tail = (*container)->tail;
+	
+	if(head != NULL && tail != NULL)
 	{
-		if(node != NULL)
+		JNodePtr node = head->next;
+		while(node != tail)
 		{
-			DeleteJNode(&node);
+			JNodePtr tempNode = node;
+			node->next->prev = node->prev;
+			node->prev->next = node->next;
+			node = node->next;
+			if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
 		}
-		node = node->next;
+
+		if(DeleteJNode(&head) == DeleteFail) return DeleteFail;
+		if(DeleteJNode(&tail) == DeleteFail) return DeleteFail;
 	}
 
 	free(*container);
 	*container = NULL;
+
+	return DeleteSuccess;
 }
 
 int JLinkedListGetSize(const JLinkedListPtr list)
 {
+	if(list == NULL) return -1;
 	return list->size;
 }
 
-void* JLinekdListGetData(const JLinkedListPtr list)
+void* JLinkedListGetData(const JLinkedListPtr list)
 {
+	if(list == NULL) return NULL;
 	return list->data;
+}
+
+void* JLinkedListSetData(const JLinkedListPtr list, void *data)
+{
+	if(list == NULL || data == NULL) return NULL;
+	list->data = data;
+	return list->data;
+}
+
+JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
+{
+	if(list == NULL || data == NULL) return NULL;
+
+	JNodePtr newNode = NewJNode();
+	if(JNodeSetData(newNode, data) == NULL) return NULL;
+
+	if(list->head->next == list->tail)
+	{
+		newNode->next = list->tail;
+		newNode->prev = list->head;
+		list->head->next = newNode;
+		list->tail->prev = newNode;
+	}
+	else if((list->head->next != list->tail) && (list->tail->prev != list->head))
+	{
+		JNodePtr oldNode = list->tail->prev;
+		newNode->prev = oldNode;
+		newNode->next = list->tail;
+		oldNode->next = newNode;
+		list->tail->prev = newNode;
+	}
+	else
+	{
+		return NULL;
+	}
+
+	list->size++;
+	return list;
+}
+
+void* JLinkedListGetFirstNodeData(JLinkedListPtr list)
+{
+	if(list == NULL) return NULL;
+	if(list->head->next == list->tail) return NULL;
+	return JNodeGetData(list->head->next);
+}
+
+void* JLinkedListGetLastNodeData(JLinkedListPtr list)
+{
+	if(list == NULL) return NULL;
+	if(list->tail->prev == list->head) return NULL;
+
+	return JNodeGetData(list->tail->prev);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,10 +191,13 @@ void* JLinekdListGetData(const JLinkedListPtr list)
  * @fn JHashTablePtr NewJHashTable(int size)
  * @brief Hash Table 관리 구조체를 새로 생성하는 함수
  * @param size 구조체에서 관리할 hash block 크기(입력)
+ * @param type 등록할 해쉬 함수의 유형(입력, 열거형)
  * @return 성공 시 새로 생성된 JHashTable 객체의 주소, 실패 시 NULL 반환
  */
-JHashTablePtr NewJHashTable(int size)
+JHashTablePtr NewJHashTable(int size, HashType type)
 {
+	if(size <= 0) return NULL;
+
     JHashTablePtr newHashTable = (JHashTablePtr)malloc(sizeof(JHashTable));
     if(newHashTable == NULL)  return NULL;
 	
@@ -129,24 +210,34 @@ JHashTablePtr NewJHashTable(int size)
 	
 	int tableIndex = 0;
 	for( ; tableIndex < size; tableIndex++)
-		newHashTable->listContainer[tableIndex] = NULL;
-  
+	{
+		newHashTable->listContainer[tableIndex] = NewJLinkedList(tableIndex);
+		if(newHashTable->listContainer[tableIndex] == NULL)
+		{
+			DeleteJHashTable(&newHashTable);
+			return NULL;
+		}
+	}
+
+	newHashTable->intHashFunc = HashInt;
+	newHashTable->charHashFunc = HashChar;
+	newHashTable->stringHashFunc = HashString;
+	newHashTable->type = type;
 	newHashTable->size = size;
-	newHashTable->intFunc = NULL;
-	newHashTable->charFunc = NULL;
-	newHashTable->stringFunc = NULL;
 
     return newHashTable;
 }
 
 /**
- * @fn void DeleteJHashTable(JHashTablePtrContainer container)
+ * @fn DeleteResult DeleteJHashTable(JHashTablePtrContainer container)
  * @brief Hash Table 관리 구조체를 삭제하는 함수
  * @param container JHashTable 구조체의 포인터(주소)들을 관리하는 이중 포인터(입력)
- * @return 반환값 없음
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환
  */
-void DeleteJHashTable(JHashTablePtrContainer container)
+DeleteResult DeleteJHashTable(JHashTablePtrContainer container)
 {
+	if(container == NULL || *container == NULL) return DeleteFail;
+
 	if((*container)->listContainer != NULL)
 	{
 		int tableIndex = 0;
@@ -156,7 +247,7 @@ void DeleteJHashTable(JHashTablePtrContainer container)
 		{
 			if((*container)->listContainer[tableIndex] != NULL)
 			{
-			    DeleteJLinkedList(&((*container)->listContainer[tableIndex]));
+			    if(DeleteJLinkedList(&((*container)->listContainer[tableIndex])) == DeleteFail) return DeleteFail;
 			}
 		}
 		free((*container)->listContainer);
@@ -164,5 +255,112 @@ void DeleteJHashTable(JHashTablePtrContainer container)
 
     free(*container);
     *container = NULL;
+
+	return DeleteSuccess;
+}
+
+int JHashTableGetSize(const JHashTablePtr table)
+{
+	if(table == NULL) return -1;
+	return table->size;
+}
+
+JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
+{
+	if(table == NULL || data == NULL) return NULL;
+
+	int tableIndex = 0;
+	int hashSize = table->size;
+	int intData = 0;
+	char charData = 0;
+	char* stringData = NULL;
+
+	switch(table->type)
+	{
+		case IntType:
+			intData = *((int*)data);
+			tableIndex = table->intHashFunc(intData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			break;
+		case CharType:
+			charData = *((char*)data);
+			tableIndex = table->charHashFunc(charData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			break;
+		case StringType:
+			stringData = (char*)data;
+			tableIndex = table->stringHashFunc(stringData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			break;
+		default:
+			return NULL;
+	}
+
+	return table;
+}
+
+void* JHashTableGetFirstData(JHashTablePtr table)
+{
+	if(table == NULL) return NULL;
+
+	void *data = NULL;
+	int tableSize = table->size;
+	int tableIndex = 0;
+
+	for( ; tableIndex < tableSize; tableIndex++)
+	{
+		data = JLinkedListGetFirstNodeData(table->listContainer[tableIndex]);
+		if(data != NULL) break;
+	}
+
+	return data;
+}
+
+void* JHashTableGetLastData(JHashTablePtr table)
+{
+	if(table == NULL) return NULL;
+
+	void *data = NULL;
+	int tableIndex = table->size - 1;
+
+	for( ; tableIndex >= 0; tableIndex--)
+	{
+		data = JLinkedListGetLastNodeData(table->listContainer[tableIndex]);
+		if(data != NULL) break;
+	}
+
+	return data;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Static Functions
+////////////////////////////////////////////////////////////////////////////////
+
+static int HashInt(int key, int hashSize)
+{
+	return key % hashSize;
+}
+
+static int HashChar(char key, int hashSize)
+{
+	int value = 0;
+	int hashIndex = 1;
+	for( ; hashIndex <= (int)key; hashIndex++)
+	{
+		value += (hashIndex * (int)key);
+	}
+	return value % hashSize;
+}
+
+static int HashString(char* key, int hashSize)
+{
+	int value = 0;
+	int hashIndex = 1;
+	int strLength = strlen(key);
+	for( ; hashIndex <= strLength; hashIndex++)
+	{
+		value += (hashIndex * key[hashIndex]);
+	}
+	return value % hashSize;
 }
 
