@@ -23,14 +23,14 @@ typedef enum FindResult
 	FindSuccess = 1
 } FindResult;
 
-// 정렬 결과 열거형
-typedef enum SortResult
+// 데이터 유형 열거형
+typedef enum DataType
 {
-	// 실패
-	SortFail = -1,
-	// 성공
-	SortSuccess = 1
-} SortResult;
+	// Key
+	Key = 1,
+	// Value
+	Value
+} DataType;
 
 // 해쉬 유형 열거형
 typedef enum HashType
@@ -88,8 +88,10 @@ typedef struct _jlinkedlist_t {
 typedef struct _jhashtable_t {
 	// 해쉬 테이블의 전체 크기
 	int size;
+	// 저장할 Key 데이터 유형
+	HashType keyType;
 	// 저장할 Value 데이터 유형
-	HashType type;
+	HashType valueType;
 	// 해쉬 테이블에서 관리하는 Slot 들
 	JLinkedListPtrContainer listContainer;
 	// int 형(정수) 키 해싱 함수
@@ -129,12 +131,12 @@ FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data);
 // Functions for JHashTable
 ///////////////////////////////////////////////////////////////////////////////
 
-JHashTablePtr NewJHashTable(int size, HashType type);
+JHashTablePtr NewJHashTable(int size, HashType keyType, HashType valueType);
 DeleteResult DeleteJHashTable(JHashTablePtrContainer container);
 
 int JHashTableGetSize(const JHashTablePtr table);
 int JHashTableGetType(const JHashTablePtr table);
-JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type);
+JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType);
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *key, void *value);
 
 void* JHashTableGetFirstData(const JHashTablePtr table);

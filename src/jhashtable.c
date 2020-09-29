@@ -12,6 +12,7 @@ static int HashInt(int key, int hashSize);
 static int HashChar(char key, int hashSize);
 static int HashString(const char* key, int hashSize);
 static int JHashTableGetHash(const JHashTablePtr table, void *key);
+static HashType CheckHashType(HashType type);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JNode
@@ -326,15 +327,17 @@ FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data)
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @fn JHashTablePtr NewJHashTable(int size)
+ * @fn JHashTablePtr NewJHashTable(int size, HashType keyType, HashType valueType)
  * @brief Hash Table 관리 구조체를 새로 생성하는 함수
  * @param size 구조체에서 관리할 hash block 크기(입력)
- * @param type 등록할 해쉬 함수의 유형(입력, 열거형)
+ * @param valueType 등록할 해쉬 함수의 유형(입력, 열거형)
  * @return 성공 시 새로 생성된 JHashTable 객체의 주소, 실패 시 NULL 반환
  */
-JHashTablePtr NewJHashTable(int size, HashType type)
+JHashTablePtr NewJHashTable(int size, HashType keyType, HashType valueType)
 {
 	if(size <= 0) return NULL;
+	if(CheckHashType(keyType) == Unknown) return NULL;
+	if(CheckHashType(valueType) == Unknown) return NULL;
 
     JHashTablePtr newHashTable = (JHashTablePtr)malloc(sizeof(JHashTable));
     if(newHashTable == NULL)  return NULL;
@@ -360,7 +363,8 @@ JHashTablePtr NewJHashTable(int size, HashType type)
 	newHashTable->intHashFunc = HashInt;
 	newHashTable->charHashFunc = HashChar;
 	newHashTable->stringHashFunc = HashString;
-	newHashTable->type = type;
+	newHashTable->keyType = keyType;
+	newHashTable->valueType = valueType;
 	newHashTable->size = size;
 
     return newHashTable;
@@ -418,28 +422,32 @@ int JHashTableGetSize(const JHashTablePtr table)
 HashType JHashTableGetType(const JHashTablePtr table)
 {
 	if(table == NULL) return -1;
-	return table->type;
+	return table->valueType;
 }
 
 /**
- * @fn JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
+ * @fn JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType)
  * @brief 해쉬 테이블의 해쉬 유형을 변경하는 함수
  * @param table 해쉬 테이블 구조체 객체의 주소(출력)
- * @param type 변경할 해쉬 유형(입력, HashType 열거형 참고)
+ * @param valueType 변경할 해쉬 유형(입력, HashType 열거형 참고)
  * @return 성공 시 해쉬 테이블 구조체의 주소, 실패 시 NULL 반환
  */
-JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
+JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType)
 {
 	if(table == NULL) return NULL;
-	switch(type)
+	if(CheckHashType(hashType) == Unknown) return NULL;
+
+	switch(dataType)
 	{
-		case IntType: break;
-		case CharType: break; 
-		case StringType: break;
+		case Key:
+			table->keyType = hashType;
+			break;
+		case Value:
+			table->valueType = hashType;
+			break;
 		default: return NULL;
 	}
 
-	table->type = type;
 	return table;
 }
 
@@ -634,7 +642,7 @@ void JHashTablePrintAll(const JHashTablePtr table)
         if(isDataExist == 1) printf("[ ");
         while(node != tail)
         {
-            switch(table->type)
+            switch(table->valueType)
             {
                 case IntType:
                     printf("%d ", *((int*)node->data));
@@ -712,14 +720,14 @@ static int HashString(const char* key, int hashSize)
  * @brief 해쉬 테이블의 해쉬 유형에 따라 지정한 키에 대한 해쉬값을 반환하는 함수 
  * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
  * @param key 해싱할 키(입력)
- * @return 성공 시 해쉬값, 실패 시 HASH_FAIL(-1) 반환
+ * @return 성공 시 해쉬값, 실패 시 HASH_FAIL 반환(매크로 선언 참고)
  */
 static int JHashTableGetHash(const JHashTablePtr table, void *key)
 {
 	int hash = 0;
 	int tableSize = table->size;
 
-	switch(table->type)
+	switch(table->keyType)
 	{
 		case IntType:
 			hash = table->intHashFunc(*((int*)key), tableSize);
@@ -734,5 +742,23 @@ static int JHashTableGetHash(const JHashTablePtr table, void *key)
 	}
 
 	return hash;
+}
+
+/**
+ * @fn static HashType CheckHashType(HashType type)
+ * @brief 지정한 해쉬 유형이 등록되어 있는지 검사하는 함수
+ * @param type 검사할 해쉬 유형(입력)
+ * @return 성공 시 지정한 해쉬 유형, 실패 시 Unknown 반환(HashType 열거형 참고)
+ */
+static HashType CheckHashType(HashType type)
+{
+	switch(type)
+	{
+		case IntType:
+		case CharType:
+		case StringType:
+		return type;
+	}
+	return Unknown;
 }
 
