@@ -13,7 +13,7 @@ DECLARE_TEST();
 /// Node Test
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlNode, CreateAndDeleteNode, {
+TEST(Node, CreateAndDeleteNode, {
 	JNodePtr node = NewJNode();
 	EXPECT_NOT_NULL(node);
 	EXPECT_NUM_EQUAL(DeleteJNode(&node), DeleteSuccess);
@@ -25,7 +25,7 @@ TEST(ControlNode, CreateAndDeleteNode, {
 /// Linked List Test
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlLinkedList, CreateAndDeleteLinkedList, {
+TEST(LinkedList, CreateAndDeleteLinkedList, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	EXPECT_NOT_NULL(list);
 	EXPECT_NUM_EQUAL(DeleteJLinkedList(&list), DeleteSuccess);
@@ -34,7 +34,7 @@ TEST(ControlLinkedList, CreateAndDeleteLinkedList, {
 	EXPECT_NUM_EQUAL(DeleteJLinkedList(NULL), DeleteFail);
 })
 
-TEST(ControlLinkedList, GetSize, {
+TEST(LinkedList, GetSize, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 	int expected2 = 6;
@@ -54,7 +54,7 @@ TEST(ControlLinkedList, GetSize, {
 /// Hash Table Test
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable, CreateAndDeleteHashTable, {
+TEST(HashTable, CreateAndDeleteHashTable, {
 	int size = 10;
 	JHashTablePtr table = NewJHashTable(size, IntType, IntType);
 	EXPECT_NOT_NULL(table);
@@ -72,14 +72,14 @@ TEST(ControlHashTable, CreateAndDeleteHashTable, {
 	EXPECT_NUM_EQUAL(DeleteJHashTable(NULL), DeleteFail);
 })
 
-TEST(ControlHashTable, GetSize, {
+TEST(HashTable, GetSize, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
 	EXPECT_NUM_EQUAL(JHashTableGetSize(table), expected);
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable, GetType, {
+TEST(HashTable, GetType, {
 	int size = 10;
 	HashType expected = IntType;
 	JHashTablePtr table = NewJHashTable(size, IntType, IntType);
@@ -87,7 +87,7 @@ TEST(ControlHashTable, GetType, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable, ChangeHashType, {
+TEST(HashTable, ChangeHashType, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
 
@@ -114,7 +114,7 @@ TEST(ControlHashTable, ChangeHashType, {
 /// Node Test (int)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlNode_INT, SetData, {
+TEST(Node_INT, SetData, {
 	JNodePtr node = NewJNode();
 
 	int expected = 5;
@@ -129,7 +129,7 @@ TEST(ControlNode_INT, SetData, {
 	DeleteJNode(&node);
 })
 
-TEST(ControlNode_INT, GetData, {
+TEST(Node_INT, GetData, {
 	JNodePtr node = NewJNode();
 
 	int expected = 5;
@@ -146,7 +146,7 @@ TEST(ControlNode_INT, GetData, {
 /// LinkedList Test (int)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlLinkedList_INT, AddNode, {
+TEST(LinkedList_INT, AddNode, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected = 5;
 
@@ -165,7 +165,7 @@ TEST(ControlLinkedList_INT, AddNode, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, GetFirstNodeData, {
+TEST(LinkedList_INT, GetFirstNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	int expected1 = 5;
@@ -183,7 +183,7 @@ TEST(ControlLinkedList_INT, GetFirstNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, GetLastNodeData, {
+TEST(LinkedList_INT, GetLastNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	int expected1 = 5;
@@ -201,7 +201,7 @@ TEST(ControlLinkedList_INT, GetLastNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, SetData, {
+TEST(LinkedList_INT, SetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected = 5;
 
@@ -215,7 +215,7 @@ TEST(ControlLinkedList_INT, SetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, GetData, {
+TEST(LinkedList_INT, GetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected = 5;
 
@@ -228,7 +228,7 @@ TEST(ControlLinkedList_INT, GetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, DeleteNodeData, {
+TEST(LinkedList_INT, DeleteNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 
@@ -243,7 +243,7 @@ TEST(ControlLinkedList_INT, DeleteNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_INT, FindNodeData, {
+TEST(LinkedList_INT, FindNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 
@@ -261,7 +261,7 @@ TEST(ControlLinkedList_INT, FindNodeData, {
 /// HashTable Test (int)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_INT, AddData, {
+TEST(HashTable_INT, AddData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	int expectedValue1 = 10;
@@ -279,7 +279,7 @@ TEST(ControlHashTable_INT, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, GetFirstData, {
+TEST(HashTable_INT, GetFirstData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -296,7 +296,7 @@ TEST(ControlHashTable_INT, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, GetLastData, {
+TEST(HashTable_INT, GetLastData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -313,7 +313,7 @@ TEST(ControlHashTable_INT, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, DeleteData, {
+TEST(HashTable_INT, DeleteData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -340,7 +340,7 @@ TEST(ControlHashTable_INT, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, DeleteFirstData, {
+TEST(HashTable_INT, DeleteFirstData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -361,7 +361,7 @@ TEST(ControlHashTable_INT, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, DeleteLastData, {
+TEST(HashTable_INT, DeleteLastData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -382,7 +382,7 @@ TEST(ControlHashTable_INT, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT, FindData, {
+TEST(HashTable_INT, FindData, {
 	int size = 10;
 	int expectedKey1 = 4;
 	int expectedValue1 = 10;
@@ -414,7 +414,7 @@ TEST(ControlHashTable_INT, FindData, {
 /// Node Test (char)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlNode_CHAR, SetData, {
+TEST(Node_CHAR, SetData, {
 	JNodePtr node = NewJNode();
 
 	char expected = 'a';
@@ -429,7 +429,7 @@ TEST(ControlNode_CHAR, SetData, {
 	DeleteJNode(&node);
 })
 
-TEST(ControlNode_CHAR, GetData, {
+TEST(Node_CHAR, GetData, {
 	JNodePtr node = NewJNode();
 
 	char expected = 'a';
@@ -446,7 +446,7 @@ TEST(ControlNode_CHAR, GetData, {
 /// LinkedList Test (char)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlLinkedList_CHAR, AddNode, {
+TEST(LinkedList_CHAR, AddNode, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char expected = 'a';
 
@@ -465,7 +465,7 @@ TEST(ControlLinkedList_CHAR, AddNode, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, GetFirstNodeData, {
+TEST(LinkedList_CHAR, GetFirstNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	char expected1 = 'a';
@@ -483,7 +483,7 @@ TEST(ControlLinkedList_CHAR, GetFirstNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, GetLastNodeData, {
+TEST(LinkedList_CHAR, GetLastNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	char expected1 = 'a';
@@ -501,7 +501,7 @@ TEST(ControlLinkedList_CHAR, GetLastNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, SetData, {
+TEST(LinkedList_CHAR, SetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char expected = 'a';
 
@@ -515,7 +515,7 @@ TEST(ControlLinkedList_CHAR, SetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, GetData, {
+TEST(LinkedList_CHAR, GetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char expected = 'a';
 
@@ -528,7 +528,7 @@ TEST(ControlLinkedList_CHAR, GetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, DeleteNodeData, {
+TEST(LinkedList_CHAR, DeleteNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char expected1 = 'a';
 
@@ -543,7 +543,7 @@ TEST(ControlLinkedList_CHAR, DeleteNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_CHAR, FindNodeData, {
+TEST(LinkedList_CHAR, FindNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char expected1 = 'a';
 
@@ -561,7 +561,7 @@ TEST(ControlLinkedList_CHAR, FindNodeData, {
 /// HashTable Test (char)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_CHAR, AddData, {
+TEST(HashTable_CHAR, AddData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'd';
@@ -579,7 +579,7 @@ TEST(ControlHashTable_CHAR, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, GetFirstData, {
+TEST(HashTable_CHAR, GetFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -596,7 +596,7 @@ TEST(ControlHashTable_CHAR, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, GetLastData, {
+TEST(HashTable_CHAR, GetLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -613,7 +613,7 @@ TEST(ControlHashTable_CHAR, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, DeleteData, {
+TEST(HashTable_CHAR, DeleteData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -640,7 +640,7 @@ TEST(ControlHashTable_CHAR, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, DeleteFirstData, {
+TEST(HashTable_CHAR, DeleteFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -661,7 +661,7 @@ TEST(ControlHashTable_CHAR, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, DeleteLastData, {
+TEST(HashTable_CHAR, DeleteLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -682,7 +682,7 @@ TEST(ControlHashTable_CHAR, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR, FindData, {
+TEST(HashTable_CHAR, FindData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char expectedValue1 = 'x';
@@ -714,7 +714,7 @@ TEST(ControlHashTable_CHAR, FindData, {
 /// Node Test (string)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlNode_STRING, SetData, {
+TEST(Node_STRING, SetData, {
 	JNodePtr node = NewJNode();
 
 	char *expected = "abc";
@@ -729,7 +729,7 @@ TEST(ControlNode_STRING, SetData, {
 	DeleteJNode(&node);
 })
 
-TEST(ControlNode_STRING, GetData, {
+TEST(Node_STRING, GetData, {
 	JNodePtr node = NewJNode();
 
 	char *expected = "abc";
@@ -746,7 +746,7 @@ TEST(ControlNode_STRING, GetData, {
 /// LinkedList Test (string)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlLinkedList_STRING, AddNode, {
+TEST(LinkedList_STRING, AddNode, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char *expected = "abc";
 
@@ -765,7 +765,7 @@ TEST(ControlLinkedList_STRING, AddNode, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, GetFirstNodeData, {
+TEST(LinkedList_STRING, GetFirstNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	char *expected1 = "abc";
@@ -783,7 +783,7 @@ TEST(ControlLinkedList_STRING, GetFirstNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, GetLastNodeData, {
+TEST(LinkedList_STRING, GetLastNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	char *expected1 = "abc";
@@ -801,7 +801,7 @@ TEST(ControlLinkedList_STRING, GetLastNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, SetData, {
+TEST(LinkedList_STRING, SetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char *expected = "abc";
 
@@ -815,7 +815,7 @@ TEST(ControlLinkedList_STRING, SetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, GetData, {
+TEST(LinkedList_STRING, GetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char *expected = "abc";
 
@@ -828,7 +828,7 @@ TEST(ControlLinkedList_STRING, GetData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, DeleteNodeData, {
+TEST(LinkedList_STRING, DeleteNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char *expected1 = "abc";
 
@@ -843,7 +843,7 @@ TEST(ControlLinkedList_STRING, DeleteNodeData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList_STRING, FindNodeData, {
+TEST(LinkedList_STRING, FindNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	char *expected1 = "abc";
 
@@ -861,7 +861,7 @@ TEST(ControlLinkedList_STRING, FindNodeData, {
 /// HashTable Test (string)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_STRING, AddData, {
+TEST(HashTable_STRING, AddData, {
 	int size = 10;
 	char *expectedKey1 = "abc";
 	char *expectedValue1 = "123";
@@ -879,7 +879,7 @@ TEST(ControlHashTable_STRING, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, GetFirstData, {
+TEST(HashTable_STRING, GetFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -896,7 +896,7 @@ TEST(ControlHashTable_STRING, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, GetLastData, {
+TEST(HashTable_STRING, GetLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -913,7 +913,7 @@ TEST(ControlHashTable_STRING, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, DeleteData, {
+TEST(HashTable_STRING, DeleteData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -940,7 +940,7 @@ TEST(ControlHashTable_STRING, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, DeleteFirstData, {
+TEST(HashTable_STRING, DeleteFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -961,7 +961,7 @@ TEST(ControlHashTable_STRING, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, DeleteLastData, {
+TEST(HashTable_STRING, DeleteLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -982,7 +982,7 @@ TEST(ControlHashTable_STRING, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING, FindData, {
+TEST(HashTable_STRING, FindData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char *expectedValue1 = "[1$2**3]";
@@ -1014,7 +1014,7 @@ TEST(ControlHashTable_STRING, FindData, {
 /// HashTable Test (int & char)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_INT_CHAR, AddData, {
+TEST(HashTable_INT_CHAR, AddData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'd';
@@ -1032,7 +1032,7 @@ TEST(ControlHashTable_INT_CHAR, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, GetFirstData, {
+TEST(HashTable_INT_CHAR, GetFirstData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1049,7 +1049,7 @@ TEST(ControlHashTable_INT_CHAR, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, GetLastData, {
+TEST(HashTable_INT_CHAR, GetLastData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1066,7 +1066,7 @@ TEST(ControlHashTable_INT_CHAR, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, DeleteData, {
+TEST(HashTable_INT_CHAR, DeleteData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1093,7 +1093,7 @@ TEST(ControlHashTable_INT_CHAR, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, DeleteFirstData, {
+TEST(HashTable_INT_CHAR, DeleteFirstData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1114,7 +1114,7 @@ TEST(ControlHashTable_INT_CHAR, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, DeleteLastData, {
+TEST(HashTable_INT_CHAR, DeleteLastData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1135,7 +1135,7 @@ TEST(ControlHashTable_INT_CHAR, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_CHAR, FindData, {
+TEST(HashTable_INT_CHAR, FindData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char expectedValue1 = 'x';
@@ -1165,7 +1165,7 @@ TEST(ControlHashTable_INT_CHAR, FindData, {
 /// HashTable Test (char & int)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_CHAR_INT, AddData, {
+TEST(HashTable_CHAR_INT, AddData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1183,7 +1183,7 @@ TEST(ControlHashTable_CHAR_INT, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, GetFirstData, {
+TEST(HashTable_CHAR_INT, GetFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1200,7 +1200,7 @@ TEST(ControlHashTable_CHAR_INT, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, GetLastData, {
+TEST(HashTable_CHAR_INT, GetLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1217,7 +1217,7 @@ TEST(ControlHashTable_CHAR_INT, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, DeleteData, {
+TEST(HashTable_CHAR_INT, DeleteData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1244,7 +1244,7 @@ TEST(ControlHashTable_CHAR_INT, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, DeleteFirstData, {
+TEST(HashTable_CHAR_INT, DeleteFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1265,7 +1265,7 @@ TEST(ControlHashTable_CHAR_INT, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, DeleteLastData, {
+TEST(HashTable_CHAR_INT, DeleteLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1286,7 +1286,7 @@ TEST(ControlHashTable_CHAR_INT, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_INT, FindData, {
+TEST(HashTable_CHAR_INT, FindData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	int expectedValue1 = 5;
@@ -1318,7 +1318,7 @@ TEST(ControlHashTable_CHAR_INT, FindData, {
 /// HashTable Test (int & string)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_INT_STRING, AddData, {
+TEST(HashTable_INT_STRING, AddData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1336,7 +1336,7 @@ TEST(ControlHashTable_INT_STRING, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, GetFirstData, {
+TEST(HashTable_INT_STRING, GetFirstData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1353,7 +1353,7 @@ TEST(ControlHashTable_INT_STRING, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, GetLastData, {
+TEST(HashTable_INT_STRING, GetLastData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1370,7 +1370,7 @@ TEST(ControlHashTable_INT_STRING, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, DeleteData, {
+TEST(HashTable_INT_STRING, DeleteData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1397,7 +1397,7 @@ TEST(ControlHashTable_INT_STRING, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, DeleteFirstData, {
+TEST(HashTable_INT_STRING, DeleteFirstData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1418,7 +1418,7 @@ TEST(ControlHashTable_INT_STRING, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, DeleteLastData, {
+TEST(HashTable_INT_STRING, DeleteLastData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1439,7 +1439,7 @@ TEST(ControlHashTable_INT_STRING, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_INT_STRING, FindData, {
+TEST(HashTable_INT_STRING, FindData, {
 	int size = 10;
 	int expectedKey1 = 5;
 	char *expectedValue1 = "abc";
@@ -1469,7 +1469,7 @@ TEST(ControlHashTable_INT_STRING, FindData, {
 /// HashTable Test (string & int)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_STRING_INT, AddData, {
+TEST(HashTable_STRING_INT, AddData, {
 	int size = 10;
 	char *expectedKey1 = "abc";
 	int expectedValue1 = 5;
@@ -1487,7 +1487,7 @@ TEST(ControlHashTable_STRING_INT, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, GetFirstData, {
+TEST(HashTable_STRING_INT, GetFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1504,7 +1504,7 @@ TEST(ControlHashTable_STRING_INT, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, GetLastData, {
+TEST(HashTable_STRING_INT, GetLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1521,7 +1521,7 @@ TEST(ControlHashTable_STRING_INT, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, DeleteData, {
+TEST(HashTable_STRING_INT, DeleteData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1548,7 +1548,7 @@ TEST(ControlHashTable_STRING_INT, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, DeleteFirstData, {
+TEST(HashTable_STRING_INT, DeleteFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1569,7 +1569,7 @@ TEST(ControlHashTable_STRING_INT, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, DeleteLastData, {
+TEST(HashTable_STRING_INT, DeleteLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1590,7 +1590,7 @@ TEST(ControlHashTable_STRING_INT, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_INT, FindData, {
+TEST(HashTable_STRING_INT, FindData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	int expectedValue1 = 5;
@@ -1622,7 +1622,7 @@ TEST(ControlHashTable_STRING_INT, FindData, {
 /// HashTable Test (char & string)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_CHAR_STRING, AddData, {
+TEST(HashTable_CHAR_STRING, AddData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char *expectedValue1 = "abc";
@@ -1640,7 +1640,7 @@ TEST(ControlHashTable_CHAR_STRING, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, GetFirstData, {
+TEST(HashTable_CHAR_STRING, GetFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1657,7 +1657,7 @@ TEST(ControlHashTable_CHAR_STRING, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, GetLastData, {
+TEST(HashTable_CHAR_STRING, GetLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1674,7 +1674,7 @@ TEST(ControlHashTable_CHAR_STRING, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, DeleteData, {
+TEST(HashTable_CHAR_STRING, DeleteData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1701,7 +1701,7 @@ TEST(ControlHashTable_CHAR_STRING, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, DeleteFirstData, {
+TEST(HashTable_CHAR_STRING, DeleteFirstData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1722,7 +1722,7 @@ TEST(ControlHashTable_CHAR_STRING, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, DeleteLastData, {
+TEST(HashTable_CHAR_STRING, DeleteLastData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1743,7 +1743,7 @@ TEST(ControlHashTable_CHAR_STRING, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_CHAR_STRING, FindData, {
+TEST(HashTable_CHAR_STRING, FindData, {
 	int size = 10;
 	char expectedKey1 = 'a';
 	char* expectedValue1 = "abc";
@@ -1773,7 +1773,7 @@ TEST(ControlHashTable_CHAR_STRING, FindData, {
 /// HashTable Test (string & char)
 ////////////////////////////////////////////////////////////////////////////////
 
-TEST(ControlHashTable_STRING_CHAR, AddData, {
+TEST(HashTable_STRING_CHAR, AddData, {
 	int size = 10;
 	char* expectedKey1 = "abc";
 	char expectedValue1 = 'd';
@@ -1791,7 +1791,7 @@ TEST(ControlHashTable_STRING_CHAR, AddData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, GetFirstData, {
+TEST(HashTable_STRING_CHAR, GetFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1808,7 +1808,7 @@ TEST(ControlHashTable_STRING_CHAR, GetFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, GetLastData, {
+TEST(HashTable_STRING_CHAR, GetLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1825,7 +1825,7 @@ TEST(ControlHashTable_STRING_CHAR, GetLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, DeleteData, {
+TEST(HashTable_STRING_CHAR, DeleteData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1852,7 +1852,7 @@ TEST(ControlHashTable_STRING_CHAR, DeleteData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, DeleteFirstData, {
+TEST(HashTable_STRING_CHAR, DeleteFirstData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1873,7 +1873,7 @@ TEST(ControlHashTable_STRING_CHAR, DeleteFirstData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, DeleteLastData, {
+TEST(HashTable_STRING_CHAR, DeleteLastData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1894,7 +1894,7 @@ TEST(ControlHashTable_STRING_CHAR, DeleteLastData, {
 	DeleteJHashTable(&table);
 })
 
-TEST(ControlHashTable_STRING_CHAR, FindData, {
+TEST(HashTable_STRING_CHAR, FindData, {
 	int size = 10;
 	char *expectedKey1 = "def";
 	char expectedValue1 = 'x';
@@ -1930,118 +1930,118 @@ int main()
 
     REGISTER_TESTS(
 		// @ Common Test -----------------------------------------
-		Test_ControlNode_CreateAndDeleteNode,
-		Test_ControlLinkedList_CreateAndDeleteLinkedList,
-		Test_ControlLinkedList_GetSize,
-		Test_ControlHashTable_CreateAndDeleteHashTable,
-		Test_ControlHashTable_GetSize,
-		Test_ControlHashTable_GetType,
-		Test_ControlHashTable_ChangeHashType,
+		Test_Node_CreateAndDeleteNode,
+		Test_LinkedList_CreateAndDeleteLinkedList,
+		Test_LinkedList_GetSize,
+		Test_HashTable_CreateAndDeleteHashTable,
+		Test_HashTable_GetSize,
+		Test_HashTable_GetType,
+		Test_HashTable_ChangeHashType,
 
 		// @ INT Test -------------------------------------------
-		Test_ControlNode_INT_SetData,
-		Test_ControlNode_INT_GetData,
-		Test_ControlLinkedList_INT_AddNode,
-		Test_ControlLinkedList_INT_GetFirstNodeData,
-		Test_ControlLinkedList_INT_GetLastNodeData,
-		Test_ControlLinkedList_INT_SetData,
-		Test_ControlLinkedList_INT_GetData,
-		Test_ControlLinkedList_INT_DeleteNodeData,
-		Test_ControlLinkedList_INT_FindNodeData,
-		Test_ControlHashTable_INT_AddData,
-		Test_ControlHashTable_INT_GetFirstData,
-		Test_ControlHashTable_INT_GetLastData,
-		Test_ControlHashTable_INT_DeleteData,
-		Test_ControlHashTable_INT_DeleteFirstData,
-		Test_ControlHashTable_INT_DeleteLastData,
-		Test_ControlHashTable_INT_FindData,
+		Test_Node_INT_SetData,
+		Test_Node_INT_GetData,
+		Test_LinkedList_INT_AddNode,
+		Test_LinkedList_INT_GetFirstNodeData,
+		Test_LinkedList_INT_GetLastNodeData,
+		Test_LinkedList_INT_SetData,
+		Test_LinkedList_INT_GetData,
+		Test_LinkedList_INT_DeleteNodeData,
+		Test_LinkedList_INT_FindNodeData,
+		Test_HashTable_INT_AddData,
+		Test_HashTable_INT_GetFirstData,
+		Test_HashTable_INT_GetLastData,
+		Test_HashTable_INT_DeleteData,
+		Test_HashTable_INT_DeleteFirstData,
+		Test_HashTable_INT_DeleteLastData,
+		Test_HashTable_INT_FindData,
 
 		// @ CHAR Test -------------------------------------------
-		Test_ControlNode_CHAR_SetData,
-		Test_ControlNode_CHAR_GetData,
-		Test_ControlLinkedList_CHAR_AddNode,
-		Test_ControlLinkedList_CHAR_GetFirstNodeData,
-		Test_ControlLinkedList_CHAR_GetLastNodeData,
-		Test_ControlLinkedList_CHAR_SetData,
-		Test_ControlLinkedList_CHAR_GetData,
-		Test_ControlLinkedList_CHAR_DeleteNodeData,
-		Test_ControlLinkedList_CHAR_FindNodeData,
-		Test_ControlHashTable_CHAR_AddData,
-		Test_ControlHashTable_CHAR_GetFirstData,
-		Test_ControlHashTable_CHAR_GetLastData,
-		Test_ControlHashTable_CHAR_DeleteData,
-		Test_ControlHashTable_CHAR_DeleteFirstData,
-		Test_ControlHashTable_CHAR_DeleteLastData,
-		Test_ControlHashTable_CHAR_FindData,
+		Test_Node_CHAR_SetData,
+		Test_Node_CHAR_GetData,
+		Test_LinkedList_CHAR_AddNode,
+		Test_LinkedList_CHAR_GetFirstNodeData,
+		Test_LinkedList_CHAR_GetLastNodeData,
+		Test_LinkedList_CHAR_SetData,
+		Test_LinkedList_CHAR_GetData,
+		Test_LinkedList_CHAR_DeleteNodeData,
+		Test_LinkedList_CHAR_FindNodeData,
+		Test_HashTable_CHAR_AddData,
+		Test_HashTable_CHAR_GetFirstData,
+		Test_HashTable_CHAR_GetLastData,
+		Test_HashTable_CHAR_DeleteData,
+		Test_HashTable_CHAR_DeleteFirstData,
+		Test_HashTable_CHAR_DeleteLastData,
+		Test_HashTable_CHAR_FindData,
 
 		// @ STRING Test -------------------------------------------
-		Test_ControlNode_STRING_SetData,
-		Test_ControlNode_STRING_GetData,
-		Test_ControlLinkedList_STRING_AddNode,
-		Test_ControlLinkedList_STRING_GetFirstNodeData,
-		Test_ControlLinkedList_STRING_GetLastNodeData,
-		Test_ControlLinkedList_STRING_SetData,
-		Test_ControlLinkedList_STRING_GetData,
-		Test_ControlLinkedList_STRING_DeleteNodeData,
-		Test_ControlLinkedList_STRING_FindNodeData,
-		Test_ControlHashTable_STRING_AddData,
-		Test_ControlHashTable_STRING_GetFirstData,
-		Test_ControlHashTable_STRING_GetLastData,
-		Test_ControlHashTable_STRING_DeleteData,
-		Test_ControlHashTable_STRING_DeleteFirstData,
-		Test_ControlHashTable_STRING_DeleteLastData,
-		Test_ControlHashTable_STRING_FindData,
+		Test_Node_STRING_SetData,
+		Test_Node_STRING_GetData,
+		Test_LinkedList_STRING_AddNode,
+		Test_LinkedList_STRING_GetFirstNodeData,
+		Test_LinkedList_STRING_GetLastNodeData,
+		Test_LinkedList_STRING_SetData,
+		Test_LinkedList_STRING_GetData,
+		Test_LinkedList_STRING_DeleteNodeData,
+		Test_LinkedList_STRING_FindNodeData,
+		Test_HashTable_STRING_AddData,
+		Test_HashTable_STRING_GetFirstData,
+		Test_HashTable_STRING_GetLastData,
+		Test_HashTable_STRING_DeleteData,
+		Test_HashTable_STRING_DeleteFirstData,
+		Test_HashTable_STRING_DeleteLastData,
+		Test_HashTable_STRING_FindData,
 		
 		// @ Integrated Test -------------------------------------------
-		// [Format: Test_ControlHashTable_(Key)_(Value)_*]
+		// [Format: Test_HashTable_(Key)_(Value)_*]
 		// # INT & CHAR
-		Test_ControlHashTable_INT_CHAR_AddData,
-		Test_ControlHashTable_INT_CHAR_GetFirstData,
-		Test_ControlHashTable_INT_CHAR_GetLastData,
-		Test_ControlHashTable_INT_CHAR_DeleteData,
-		Test_ControlHashTable_INT_CHAR_DeleteFirstData,
-		Test_ControlHashTable_INT_CHAR_DeleteLastData,
-		Test_ControlHashTable_INT_CHAR_FindData,
+		Test_HashTable_INT_CHAR_AddData,
+		Test_HashTable_INT_CHAR_GetFirstData,
+		Test_HashTable_INT_CHAR_GetLastData,
+		Test_HashTable_INT_CHAR_DeleteData,
+		Test_HashTable_INT_CHAR_DeleteFirstData,
+		Test_HashTable_INT_CHAR_DeleteLastData,
+		Test_HashTable_INT_CHAR_FindData,
 		// # CHAR & INT
-		Test_ControlHashTable_CHAR_INT_AddData,
-		Test_ControlHashTable_CHAR_INT_GetFirstData,
-		Test_ControlHashTable_CHAR_INT_GetLastData,
-		Test_ControlHashTable_CHAR_INT_DeleteData,
-		Test_ControlHashTable_CHAR_INT_DeleteFirstData,
-		Test_ControlHashTable_CHAR_INT_DeleteLastData,
-		Test_ControlHashTable_CHAR_INT_FindData,
+		Test_HashTable_CHAR_INT_AddData,
+		Test_HashTable_CHAR_INT_GetFirstData,
+		Test_HashTable_CHAR_INT_GetLastData,
+		Test_HashTable_CHAR_INT_DeleteData,
+		Test_HashTable_CHAR_INT_DeleteFirstData,
+		Test_HashTable_CHAR_INT_DeleteLastData,
+		Test_HashTable_CHAR_INT_FindData,
 		// # INT & STRING
-		Test_ControlHashTable_INT_STRING_AddData,
-		Test_ControlHashTable_INT_STRING_GetFirstData,
-		Test_ControlHashTable_INT_STRING_GetLastData,
-		Test_ControlHashTable_INT_STRING_DeleteData,
-		Test_ControlHashTable_INT_STRING_DeleteFirstData,
-		Test_ControlHashTable_INT_STRING_DeleteLastData,
-		Test_ControlHashTable_INT_STRING_FindData,
+		Test_HashTable_INT_STRING_AddData,
+		Test_HashTable_INT_STRING_GetFirstData,
+		Test_HashTable_INT_STRING_GetLastData,
+		Test_HashTable_INT_STRING_DeleteData,
+		Test_HashTable_INT_STRING_DeleteFirstData,
+		Test_HashTable_INT_STRING_DeleteLastData,
+		Test_HashTable_INT_STRING_FindData,
 		// # STRING & INT
-		Test_ControlHashTable_STRING_INT_AddData,
-		Test_ControlHashTable_STRING_INT_GetFirstData,
-		Test_ControlHashTable_STRING_INT_GetLastData,
-		Test_ControlHashTable_STRING_INT_DeleteData,
-		Test_ControlHashTable_STRING_INT_DeleteFirstData,
-		Test_ControlHashTable_STRING_INT_DeleteLastData,
-		Test_ControlHashTable_STRING_INT_FindData,
+		Test_HashTable_STRING_INT_AddData,
+		Test_HashTable_STRING_INT_GetFirstData,
+		Test_HashTable_STRING_INT_GetLastData,
+		Test_HashTable_STRING_INT_DeleteData,
+		Test_HashTable_STRING_INT_DeleteFirstData,
+		Test_HashTable_STRING_INT_DeleteLastData,
+		Test_HashTable_STRING_INT_FindData,
 		// # CHAR & STRING
-		Test_ControlHashTable_CHAR_STRING_AddData,
-		Test_ControlHashTable_CHAR_STRING_GetFirstData,
-		Test_ControlHashTable_CHAR_STRING_GetLastData,
-		Test_ControlHashTable_CHAR_STRING_DeleteData,
-		Test_ControlHashTable_CHAR_STRING_DeleteFirstData,
-		Test_ControlHashTable_CHAR_STRING_DeleteLastData,
-		Test_ControlHashTable_CHAR_STRING_FindData,
+		Test_HashTable_CHAR_STRING_AddData,
+		Test_HashTable_CHAR_STRING_GetFirstData,
+		Test_HashTable_CHAR_STRING_GetLastData,
+		Test_HashTable_CHAR_STRING_DeleteData,
+		Test_HashTable_CHAR_STRING_DeleteFirstData,
+		Test_HashTable_CHAR_STRING_DeleteLastData,
+		Test_HashTable_CHAR_STRING_FindData,
 		// # STRING & CHAR
-		Test_ControlHashTable_STRING_CHAR_AddData,
-		Test_ControlHashTable_STRING_CHAR_GetFirstData,
-		Test_ControlHashTable_STRING_CHAR_GetLastData,
-		Test_ControlHashTable_STRING_CHAR_DeleteData,
-		Test_ControlHashTable_STRING_CHAR_DeleteFirstData,
-		Test_ControlHashTable_STRING_CHAR_DeleteLastData,
-		Test_ControlHashTable_STRING_CHAR_FindData
+		Test_HashTable_STRING_CHAR_AddData,
+		Test_HashTable_STRING_CHAR_GetFirstData,
+		Test_HashTable_STRING_CHAR_GetLastData,
+		Test_HashTable_STRING_CHAR_DeleteData,
+		Test_HashTable_STRING_CHAR_DeleteFirstData,
+		Test_HashTable_STRING_CHAR_DeleteLastData,
+		Test_HashTable_STRING_CHAR_FindData
     );
 
     RUN_ALL_TESTS();

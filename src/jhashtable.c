@@ -161,11 +161,11 @@ DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
  * @fn int JLinkedListGetSize(const JLinkedListPtr list)
  * @brief 연결 리스트의 전체 크기를 반환하는 함수
  * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
- * @return 성공 시 연결 리스트의 전체 크기, 실패 시 -1 반환
+ * @return 성공 시 연결 리스트의 전체 크기, 실패 시 Unknown 반환(HashType 열거형 참고)
  */
 int JLinkedListGetSize(const JLinkedListPtr list)
 {
-	if(list == NULL) return -1;
+	if(list == NULL) return Unknown;
 	return list->size;
 }
 
@@ -407,11 +407,11 @@ DeleteResult DeleteJHashTable(JHashTablePtrContainer container)
  * @fn int JHashTableGetSize(const JHashTablePtr table)
  * @brief 해쉬 테이블의 전체 크기를 반환하는 함수
  * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
- * @return 성공 시 해쉬 테이블의 전체 크기, 실패 시 -1 반환
+ * @return 성공 시 해쉬 테이블의 전체 크기, 실패 시 Unknown 반환(HashType 열거형 참고)
  */
 int JHashTableGetSize(const JHashTablePtr table)
 {
-	if(table == NULL) return -1;
+	if(table == NULL) return Unknown;
 	return table->size;
 }
 
@@ -423,7 +423,7 @@ int JHashTableGetSize(const JHashTablePtr table)
  */
 HashType JHashTableGetType(const JHashTablePtr table)
 {
-	if(table == NULL) return -1;
+	if(table == NULL) return Unknown;
 	return table->valueType;
 }
 
@@ -624,7 +624,6 @@ void JHashTablePrintAll(const JHashTablePtr table)
 {
     if(table == NULL) return;
 
-    int isDataExist = 0;
     int listIndex = 0;
     int tableSize = table->size;
     JNodePtr head = NULL;
@@ -637,11 +636,9 @@ void JHashTablePrintAll(const JHashTablePtr table)
         head = table->listContainer[listIndex]->head;
         tail = table->listContainer[listIndex]->tail;
         node = head->next;
+        if(node == tail) continue;
 
-        if(node == tail) isDataExist = -1;
-        else isDataExist = 1;
-
-        if(isDataExist == 1) printf("(%d) [ ", table->listContainer[listIndex]->hash);
+        printf("(%d) [ ", table->listContainer[listIndex]->hash);
         while(node != tail)
         {
             switch(table->valueType)
@@ -659,7 +656,7 @@ void JHashTablePrintAll(const JHashTablePtr table)
             }
             node = node->next;
         }
-        if(isDataExist == 1) printf("]\n");
+        printf("]\n");
     }
     printf("------------------\n");
 }
