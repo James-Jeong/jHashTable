@@ -26,21 +26,14 @@ typedef enum FindResult
 // 해쉬 유형 열거형
 typedef enum HashType
 {
+	Unknown = -1,
 	IntType = 1,
 	CharType,
 	StringType
 } HashType;
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Macros
-///////////////////////////////////////////////////////////////////////////////
-
-#ifndef MAX_CHAR_NUM
-#define MAX_CHAR_NUM 256
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
-/// Definition
+/// Definitions
 ///////////////////////////////////////////////////////////////////////////////
 
 typedef int (*_jhashInt_f)(int key, int hashSize);
@@ -93,11 +86,11 @@ int JLinkedListGetSize(const JLinkedListPtr list);
 void* JLinkedListGetData(const JLinkedListPtr list);
 void* JLinkedListSetData(JLinkedListPtr list, void *data);
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data);
-void* JLinkedListGetFirstData(const JLinkedListPtr list);
-void* JLinkedListGetLastData(const JLinkedListPtr list);
+void* JLinkedListGetFirstNodeData(const JLinkedListPtr list);
+void* JLinkedListGetLastNodeData(const JLinkedListPtr list);
 
-DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data);
-FindResult JLinkedListFindData(const JLinkedListPtr list, void *data);
+DeleteResult JLinkedListDeleteNodeData(JLinkedListPtr list, void *data);
+FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JHashTable
@@ -107,21 +100,17 @@ JHashTablePtr NewJHashTable(int size, HashType type);
 DeleteResult DeleteJHashTable(JHashTablePtrContainer container);
 
 int JHashTableGetSize(const JHashTablePtr table);
+int JHashTableGetType(const JHashTablePtr table);
 JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type);
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data);
 
 void* JHashTableGetFirstData(const JHashTablePtr table);
 void* JHashTableGetLastData(const JHashTablePtr table);
+
 DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data);
-//DeleteResult JHashTableDeleteFirstData(JHashTablePtr table);
-//DeleteResult JHashTableDeleteLastData(JHashTablePtr table);
-//FindResult JHashTableFindData(const JHashTablePtr table, void *data);
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Util Functions
-///////////////////////////////////////////////////////////////////////////////
+DeleteResult JHashTableDeleteFirstData(JHashTablePtr table);
+DeleteResult JHashTableDeleteLastData(JHashTablePtr table);
+FindResult JHashTableFindData(const JHashTablePtr table, void *data);
 
 #endif
 

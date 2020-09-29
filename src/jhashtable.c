@@ -131,13 +131,17 @@ DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 	int listSize = (*container)->size;
 		
 	JNodePtr node = (*container)->head->next;
+	JNodePtr nextNode = NULL;
+	JNodePtr prevNode = NULL;
+
 	while(node != (*container)->tail)
 	{
-		JNodePtr tempNode = node;
-		node->next->prev = node->prev;
-		node->prev->next = node->next;
-		node = node->next;
-		if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
+		nextNode = node->next;
+		prevNode = node->prev;
+		if(DeleteJNode(&node) == DeleteFail) return DeleteFail;
+		nextNode->prev = prevNode;
+		prevNode->next = nextNode;
+		node = nextNode;
 	}
 
 	if(DeleteJNode(&((*container)->head)) == DeleteFail) return DeleteFail;
@@ -226,12 +230,12 @@ JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 }
 
 /**
- * @fn void* JLinkedListGetFirstData(const JLinkedListPtr list)
+ * @fn void* JLinkedListGetFirstNodeData(const JLinkedListPtr list)
  * @brief 연결 리스트에 저장된 첫 번째 노드의 데이터를 반환하는 함수
  * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
  * @return 성공 시 첫 번째 노드의 데이터의 주소, 실패 시 NULL 반환
  */
-void* JLinkedListGetFirstData(const JLinkedListPtr list)
+void* JLinkedListGetFirstNodeData(const JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->head->next == list->tail) return NULL;
@@ -239,12 +243,12 @@ void* JLinkedListGetFirstData(const JLinkedListPtr list)
 }
 
 /**
- * @fn void* JLinkedListGetLastData(const JLinkedListPtr list)
+ * @fn void* JLinkedListGetLastNodeData(const JLinkedListPtr list)
  * @brief 연결 리스트에 저장된 마지막 노드의 데이터를 반환하는 함수
  * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
  * @return 성공 시 마지막 노드의 데이터의 주소, 실패 시 NULL 반환
  */
-void* JLinkedListGetLastData(const JLinkedListPtr list)
+void* JLinkedListGetLastNodeData(const JLinkedListPtr list)
 {
 	if(list == NULL) return NULL;
 	if(list->tail->prev == list->head) return NULL;
@@ -253,42 +257,49 @@ void* JLinkedListGetLastData(const JLinkedListPtr list)
 }
 
 /**
- * @fn DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+ * @fn DeleteResult JLinkedListDeleteNodeData(JLinkedListPtr list, void *data)
  * @brief 연결 리스트에 저장된 데이터를 삭제하는 함수
  * @param list 연결 리스트 구조체 객체의 주소(츨력)
  * @param data 삭제할 데이터의 주소(입력)
  * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
  */
-DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+DeleteResult JLinkedListDeleteNodeData(JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return DeleteFail;
 
+	DeleteResult result = DeleteFail;
 	JNodePtr node = list->head->next;
+	JNodePtr nextNode = NULL;
+	JNodePtr prevNode = NULL;
+
 	while(node != list->tail)
 	{
+		nextNode = node->next;
+		prevNode = node->prev;
 		if(node->data == data)
 		{
-			node->next->prev = node->prev;
-			node->prev->next = node->next;
-			JNodePtr tempNode = node;
-			if(DeleteJNode(&tempNode) == DeleteFail) return DeleteFail;
+			if(DeleteJNode(&node) == DeleteFail) return DeleteFail;
+			nextNode->prev = prevNode;
+			prevNode->next = nextNode;
+			list->size--;
+			result = DeleteSuccess;
 			break;
 		}
-		node = node->next;
+		node = nextNode;
 	}
 
-	return DeleteSuccess;
+	return result;
 }
 
 /**
- * @fn DeleteResult JLinkedListDeleteData(JLinkedListPtr list, void *data)
+ * @fn FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data)
  * @brief 연결 리스트에 저장된 데이터를 검색하는 함수
  * 데이터 검색 후 데이터는 반환하지 않고 존재 유무만 반환한다.
  * @param list 연결 리스트 구조체 객체의 주소(입력, 읽기 전용)
  * @param data 검색할 데이터의 주소(입력)
  * @return 성공 시 FindSuccess, 실패 시 FindFail 반환(FindResult 열거형 참고)
  */
-FindResult JLinkedListFindData(const JLinkedListPtr list, void *data)
+FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return FindFail;
 
@@ -332,11 +343,11 @@ JHashTablePtr NewJHashTable(int size, HashType type)
 		return NULL;
 	}
 	
-	int tableIndex = 0;
-	for( ; tableIndex < size; tableIndex++)
+	int listIndex = 0;
+	for( ; listIndex < size; listIndex++)
 	{
-		newHashTable->listContainer[tableIndex] = NewJLinkedList(tableIndex);
-		if(newHashTable->listContainer[tableIndex] == NULL)
+		newHashTable->listContainer[listIndex] = NewJLinkedList(listIndex);
+		if(newHashTable->listContainer[listIndex] == NULL)
 		{
 			DeleteJHashTable(&newHashTable);
 			return NULL;
@@ -364,14 +375,14 @@ DeleteResult DeleteJHashTable(JHashTablePtrContainer container)
 
 	if((*container)->listContainer != NULL)
 	{
-		int tableIndex = 0;
+		int listIndex = 0;
 		int tableSize = (*container)->size;
 
-		for( ; tableIndex < tableSize; tableIndex++)
+		for( ; listIndex < tableSize; listIndex++)
 		{
-			if((*container)->listContainer[tableIndex] != NULL)
+			if((*container)->listContainer[listIndex] != NULL)
 			{
-			    if(DeleteJLinkedList(&((*container)->listContainer[tableIndex])) == DeleteFail) return DeleteFail;
+			    if(DeleteJLinkedList(&((*container)->listContainer[listIndex])) == DeleteFail) return DeleteFail;
 			}
 		}
 		free((*container)->listContainer);
@@ -393,6 +404,18 @@ int JHashTableGetSize(const JHashTablePtr table)
 {
 	if(table == NULL) return -1;
 	return table->size;
+}
+
+/**
+ * @fn HashType JHashTableGetType(const JHashTablePtr table)
+ * @brief 해쉬 테이블의 해쉬 유형을 반환하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 성공 시 해쉬 테이블의 해쉬 유형, 실패 시 Unknown 반환(HashType 열거형 참고)
+ */
+HashType JHashTableGetType(const JHashTablePtr table)
+{
+	if(table == NULL) return -1;
+	return table->type;
 }
 
 /**
@@ -428,7 +451,7 @@ JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
 {
 	if(table == NULL || data == NULL) return NULL;
 
-	int tableIndex = 0;
+	int listIndex = 0;
 	int hashSize = table->size;
 	int intData = 0;
 	char charData = 0;
@@ -438,18 +461,18 @@ JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
 	{
 		case IntType:
 			intData = *((int*)data);
-			tableIndex = table->intHashFunc(intData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			listIndex = table->intHashFunc(intData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
 			break;
 		case CharType:
 			charData = *((char*)data);
-			tableIndex = table->charHashFunc(charData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			listIndex = table->charHashFunc(charData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
 			break;
 		case StringType:
 			stringData = (char*)data;
-			tableIndex = table->stringHashFunc(stringData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[tableIndex], data) == NULL) return NULL;
+			listIndex = table->stringHashFunc(stringData, hashSize);
+			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
 			break;
 		default:
 			return NULL;
@@ -470,11 +493,11 @@ void* JHashTableGetFirstData(const JHashTablePtr table)
 
 	void *data = NULL;
 	int tableSize = table->size;
-	int tableIndex = 0;
+	int listIndex = 0;
 
-	for( ; tableIndex < tableSize; tableIndex++)
+	for( ; listIndex < tableSize; listIndex++)
 	{
-		data = JLinkedListGetFirstData(table->listContainer[tableIndex]);
+		data = JLinkedListGetFirstNodeData(table->listContainer[listIndex]);
 		if(data != NULL) break;
 	}
 
@@ -492,11 +515,11 @@ void* JHashTableGetLastData(const JHashTablePtr table)
 	if(table == NULL) return NULL;
 
 	void *data = NULL;
-	int tableIndex = table->size - 1;
+	int listIndex = table->size - 1;
 
-	for( ; tableIndex >= 0; tableIndex--)
+	for( ; listIndex >= 0; listIndex--)
 	{
-		data = JLinkedListGetLastData(table->listContainer[tableIndex]);
+		data = JLinkedListGetLastNodeData(table->listContainer[listIndex]);
 		if(data != NULL) break;
 	}
 
@@ -515,13 +538,43 @@ DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
 	if(table == NULL || data == NULL) return DeleteFail;
 
 	int tableSize = table->size;
-	int tableIndex = 0;
+	int listIndex = 0;
 	DeleteResult result = DeleteFail;
 
-	for( ; tableIndex < tableSize; tableIndex++)
+	for( ; listIndex < tableSize; listIndex++)
 	{
-		if(JLinkedListDeleteData(table->listContainer[tableIndex], data) == DeleteSuccess) {
-			result = DeleteSuccess;
+		//printf("Prev(%d) listSize:%d\n", listIndex, JLinkedListGetSize(table->listContainer[listIndex]));
+		result = JLinkedListDeleteNodeData(table->listContainer[listIndex], data);
+		//printf("After(%d) listSize:%d\n", listIndex, JLinkedListGetSize(table->listContainer[listIndex]));
+		if(result == DeleteSuccess) break;
+	}
+
+	return result;
+}
+
+/**
+ * @fn DeleteResult JHashTableDeleteFirstData(JHashTablePtr table)
+ * @brief 해쉬 테이블에 저장된 첫 번째 데이터를 삭제하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(츨력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
+DeleteResult JHashTableDeleteFirstData(JHashTablePtr table)
+{
+	if(table == NULL) return DeleteFail;
+
+	DeleteResult result = DeleteFail;
+	void *data = NULL;
+	int tableSize = table->size;
+	int listIndex = 0;
+
+	for( ; listIndex < tableSize; listIndex++)
+	{
+		data = JLinkedListGetFirstNodeData(table->listContainer[listIndex]);
+		if(data != NULL)
+		{
+			//printf("Prev listSize:%d\n", JLinkedListGetSize(table->listContainer[listIndex]));
+			result = JLinkedListDeleteNodeData(table->listContainer[listIndex], data);
+			//printf("After listSize:%d\n", JLinkedListGetSize(table->listContainer[listIndex]));
 			break;
 		}
 	}
@@ -529,6 +582,59 @@ DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
 	return result;
 }
 
+/**
+ * @fn DeleteResult JHashTableDeleteLastData(JHashTablePtr table)
+ * @brief 해쉬 테이블에 저장된 마지막 데이터를 삭제하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(츨력)
+ * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
+ */
+DeleteResult JHashTableDeleteLastData(JHashTablePtr table)
+{
+	if(table == NULL) return DeleteFail;
+
+	DeleteResult result = DeleteFail;
+	void *data = NULL;
+	int listIndex = table->size - 1;
+
+	for( ; listIndex >= 0; listIndex--)
+	{
+		data = JLinkedListGetLastNodeData(table->listContainer[listIndex]);
+		if(data != NULL)
+		{
+			//printf("Prev listSize:%d\n", JLinkedListGetSize(table->listContainer[listIndex]));
+			result = JLinkedListDeleteNodeData(table->listContainer[listIndex], data);
+			//printf("After listSize:%d\n", JLinkedListGetSize(table->listContainer[listIndex]));
+			break;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * @fn FindResult JHashTableFindData(const JHashTablePtr table, void *data)
+ * @brief 해쉬 테이블에 저장된 데이터를 검색하는 함수
+ * 데이터 검색 후 데이터는 반환하지 않고 존재 유무만 반환한다.
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @param data 검색할 데이터의 주소(입력)
+ * @return 성공 시 FindSuccess, 실패 시 FindFail 반환(FindResult 열거형 참고)
+ */
+FindResult JHashTableFindData(const JHashTablePtr table, void *data)
+{
+	if(table == NULL || data == NULL) return FindFail;
+
+	FindResult result = FindFail;
+	int tableSize = table->size;
+	int listIndex = 0;
+
+	for( ; listIndex < tableSize; listIndex++)
+	{
+		result = JLinkedListFindNodeData(table->listContainer[listIndex], data);
+		if(result == FindSuccess) break;
+	}
+
+	return result;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Static Functions

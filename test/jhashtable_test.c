@@ -2,6 +2,12 @@
 #include "../include/jhashtable.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+/// Predefinition Of Static Function
+////////////////////////////////////////////////////////////////////////////////
+
+static void printIntHash(const JHashTablePtr table);
+
+////////////////////////////////////////////////////////////////////////////////
 /// Definitions of Test
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +79,7 @@ TEST(ControlLinkedList, AddNode, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, GetLinkedListFirstData, {
+TEST(ControlLinkedList, GetFirstNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	int expected1 = 5;
@@ -84,14 +90,14 @@ TEST(ControlLinkedList, GetLinkedListFirstData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetFirstData(list)), expected1);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetFirstNodeData(list)), expected1);
 
-	EXPECT_NULL(JLinkedListGetFirstData(NULL));
+	EXPECT_NULL(JLinkedListGetFirstNodeData(NULL));
 
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, GetLinkedListLastData, {
+TEST(ControlLinkedList, GetLastNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 
 	int expected1 = 5;
@@ -102,14 +108,14 @@ TEST(ControlLinkedList, GetLinkedListLastData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetLastData(list)), expected3);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetLastNodeData(list)), expected3);
 	
-	EXPECT_NULL(JLinkedListGetFirstData(NULL));
+	EXPECT_NULL(JLinkedListGetLastNodeData(NULL));
 
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, GetLinkedListSize, {
+TEST(ControlLinkedList, GetSize, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 	int expected2 = 6;
@@ -125,7 +131,7 @@ TEST(ControlLinkedList, GetLinkedListSize, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, SetLinkedListData, {
+TEST(ControlLinkedList, SetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected = 5;
 
@@ -139,7 +145,7 @@ TEST(ControlLinkedList, SetLinkedListData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, GetLinkedListData, {
+TEST(ControlLinkedList, GetData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected = 5;
 
@@ -152,31 +158,31 @@ TEST(ControlLinkedList, GetLinkedListData, {
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, DeleteLinkedListData, {
+TEST(ControlLinkedList, DeleteNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteData(list, &expected1), DeleteSuccess);
-	EXPECT_NULL(JLinkedListGetLastData(list));
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, &expected1), DeleteSuccess);
+	EXPECT_NULL(JLinkedListGetLastNodeData(list));
 
-	EXPECT_NUM_EQUAL(JLinkedListDeleteData(NULL, &expected1), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteData(list, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteData(NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, &expected1), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail);
 
 	DeleteJLinkedList(&list);
 })
 
-TEST(ControlLinkedList, FindLinkedListData, {
+TEST(ControlLinkedList, FindNodeData, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	int expected1 = 5;
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListFindData(list, &expected1), FindSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, &expected1), FindSuccess);
 
-	EXPECT_NUM_EQUAL(JLinkedListFindData(NULL, &expected1), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindData(list, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindData(NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, &expected1), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail);
 
 	DeleteJLinkedList(&list);
 })
@@ -196,10 +202,18 @@ TEST(ControlHashTable, CreateAndDeleteHashTable, {
 	EXPECT_NUM_EQUAL(DeleteJHashTable(NULL), DeleteFail);
 })
 
-TEST(ControlHashTable, GetHashTableSize, {
+TEST(ControlHashTable, GetSize, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType);
 	EXPECT_NUM_EQUAL(JHashTableGetSize(table), expected);
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable, GetType, {
+	int size = 10;
+	HashType expected = IntType;
+	JHashTablePtr table = NewJHashTable(size, IntType);
+	EXPECT_NUM_EQUAL(JHashTableGetType(table), expected);
 	DeleteJHashTable(&table);
 })
 
@@ -270,14 +284,83 @@ TEST(ControlHashTable, GetLastData, {
 TEST(ControlHashTable, DeleteData, {
 	int size = 10;
 	int expected1 = 4;
+	int expected2 = 5;
 	JHashTablePtr table = NewJHashTable(size, IntType);
 
 	JHashTableAddData(table, &expected1);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expected1), DeleteSuccess);
+	JHashTableAddData(table, &expected2);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expected2), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expected1);
+	//printIntHash(table);
 
 	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expected1), DeleteFail);
 	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL), DeleteFail);
 	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable, DeleteFirstData, {
+	int size = 10;
+	int expected1 = 4;
+	int expected2 = 5;
+	JHashTablePtr table = NewJHashTable(size, IntType);
+
+	JHashTableAddData(table, &expected1);
+	JHashTableAddData(table, &expected2);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expected2);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable, DeleteLastData, {
+	int size = 10;
+	int expected1 = 4;
+	int expected2 = 5;
+	int expected3 = 6;
+	JHashTablePtr table = NewJHashTable(size, IntType);
+
+	JHashTableAddData(table, &expected1);
+	JHashTableAddData(table, &expected2);
+	JHashTableAddData(table, &expected3);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expected2);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable, FindData, {
+	int size = 10;
+	int expected1 = 4;
+	int expected2 = 5;
+	int expected3 = 6;
+	JHashTablePtr table = NewJHashTable(size, IntType);
+
+	JHashTableAddData(table, &expected1);
+	JHashTableAddData(table, &expected2);
+	JHashTableAddData(table, &expected3);
+	//printIntHash(table);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expected1), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expected2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expected3), FindSuccess);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expected1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL), FindFail);
 
 	DeleteJHashTable(&table);
 })
@@ -296,20 +379,24 @@ int main()
 		Test_ControlNode_GetData,
 		Test_ControlLinkedList_CreateAndDeleteLinkedList,
 		Test_ControlLinkedList_AddNode,
-		Test_ControlLinkedList_GetLinkedListFirstData,
-		Test_ControlLinkedList_GetLinkedListLastData,
-		Test_ControlLinkedList_GetLinkedListSize,
-		Test_ControlLinkedList_SetLinkedListData,
-		Test_ControlLinkedList_GetLinkedListData,
-		Test_ControlLinkedList_DeleteLinkedListData,
-		Test_ControlLinkedList_FindLinkedListData,
+		Test_ControlLinkedList_GetFirstNodeData,
+		Test_ControlLinkedList_GetLastNodeData,
+		Test_ControlLinkedList_GetSize,
+		Test_ControlLinkedList_SetData,
+		Test_ControlLinkedList_GetData,
+		Test_ControlLinkedList_DeleteNodeData,
+		Test_ControlLinkedList_FindNodeData,
 		Test_ControlHashTable_CreateAndDeleteHashTable,
-		Test_ControlHashTable_GetHashTableSize,
+		Test_ControlHashTable_GetSize,
+		Test_ControlHashTable_GetType,
 		Test_ControlHashTable_ChangeHashType,
 		Test_ControlHashTable_AddData,
 		Test_ControlHashTable_GetFirstData,
 		Test_ControlHashTable_GetLastData,
-		Test_ControlHashTable_DeleteData
+		Test_ControlHashTable_DeleteData,
+		Test_ControlHashTable_DeleteFirstData,
+		Test_ControlHashTable_DeleteLastData,
+		Test_ControlHashTable_FindData
     );
 
     RUN_ALL_TESTS();
@@ -319,3 +406,38 @@ int main()
 	return 1;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// Static Function
+////////////////////////////////////////////////////////////////////////////////
+
+static void printIntHash(const JHashTablePtr table)
+{
+	if(table == NULL) return;
+
+	int isDataExist = 0;
+	int listIndex = 0;
+	int tableSize = table->size;
+	JNodePtr head = NULL;
+	JNodePtr tail = NULL;
+	JNodePtr node = NULL;
+
+	printf("------------------\n");
+	for( ; listIndex < tableSize; listIndex++)
+	{
+		head = table->listContainer[listIndex]->head;
+		tail = table->listContainer[listIndex]->tail;
+		node = head->next;
+
+		if(node == tail) isDataExist = -1;
+		else isDataExist = 1;
+
+		if(isDataExist == 1) printf("[ ");
+		while(node != tail)
+		{
+			printf("%d ", *((int*)node->data));
+			node = node->next;
+		}
+		if(isDataExist == 1) printf("]\n");
+	}
+	printf("------------------\n");
+}
