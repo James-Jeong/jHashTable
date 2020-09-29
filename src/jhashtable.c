@@ -11,6 +11,7 @@
 static int HashInt(int key, int hashSize);
 static int HashChar(char key, int hashSize);
 static int HashString(const char* key, int hashSize);
+static int JHashTableGetHash(const JHashTablePtr table, void *key);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for JNode
@@ -194,6 +195,7 @@ void* JLinkedListSetData(JLinkedListPtr list, void *data)
 /**
  * @fn void* JLinkedListSetData(const JLinkedListPtr list, void *data)
  * @brief 연결 리스트에 새로운 노드를 추가하는 함수
+ * 중복 허용하지 않음
  * @param list 연결 리스트 구조체 객체의 주소(출력)
  * @param data 저장할 노드의 데이터 주소(입력)
  * @return 성공 시 연결 리스트 구조체의 주소, 실패 시 NULL 반환
@@ -201,6 +203,7 @@ void* JLinkedListSetData(JLinkedListPtr list, void *data)
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 {
 	if(list == NULL || data == NULL) return NULL;
+	if(JLinkedListFindNodeData(list, data) == FindSuccess) return NULL;
 
 	JNodePtr newNode = NewJNode();
 	if(JNodeSetData(newNode, data) == NULL) return NULL;
@@ -441,43 +444,21 @@ JHashTablePtr JHashTableChangeType(JHashTablePtr table, HashType type)
 }
 
 /**
- * @fn JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
+ * @fn JHashTablePtr JHashTableAddData(JHashTablePtr table, void *key, void *value)
  * @brief 해쉬 테이블에 새로운 데이터를 추가하는 함수
  * @param table 해쉬 테이블 구조체 객체의 주소(출력)
- * @param data 저장할 데이터의 주소(입력)
+ * @param key 저장할 키(입력)
+ * @param value 저장할 데이터(입력)
  * @return 성공 시 해쉬 테이블 구조체의 주소, 실패 시 NULL 반환
  */
-JHashTablePtr JHashTableAddData(JHashTablePtr table, void *data)
+JHashTablePtr JHashTableAddData(JHashTablePtr table, void *key, void *value)
 {
-	if(table == NULL || data == NULL) return NULL;
+	if(table == NULL || key == NULL || value == NULL) return NULL;
 
-	int listIndex = 0;
-	int hashSize = table->size;
-	int intData = 0;
-	char charData = 0;
-	char* stringData = NULL;
+	int listIndex = JHashTableGetHash(table, key);
+	if(listIndex == HASH_FAIL) return NULL;
 
-	switch(table->type)
-	{
-		case IntType:
-			intData = *((int*)data);
-			listIndex = table->intHashFunc(intData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
-			break;
-		case CharType:
-			charData = *((char*)data);
-			listIndex = table->charHashFunc(charData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
-			break;
-		case StringType:
-			stringData = (char*)data;
-			listIndex = table->stringHashFunc(stringData, hashSize);
-			if(JLinkedListAddNode(table->listContainer[listIndex], data) == NULL) return NULL;
-			break;
-		default:
-			return NULL;
-	}
-
+	if(JLinkedListAddNode(table->listContainer[listIndex], value) == NULL) return NULL;
 	return table;
 }
 
@@ -527,29 +508,22 @@ void* JHashTableGetLastData(const JHashTablePtr table)
 }
 
 /**
- * @fn DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
+ * @fn DeleteResult JHashTableDeleteData(JHashTablePtr table, void* key, void *value)
  * @brief 해쉬 테이블에 저장된 데이터를 삭제하는 함수
  * @param table 해쉬 테이블 구조체 객체의 주소(츨력)
- * @param data 삭제할 데이터의 주소(입력)
+ * @param key 삭제할 키(입력)
+ * @param value 삭제할 데이터(입력)
  * @return 성공 시 DeleteSuccess, 실패 시 DeleteFail 반환(DeleteResult 열거형 참고)
  */
-DeleteResult JHashTableDeleteData(JHashTablePtr table, void *data)
+DeleteResult JHashTableDeleteData(JHashTablePtr table, void *key, void *value)
 {
-	if(table == NULL || data == NULL) return DeleteFail;
+	if(table == NULL || key == NULL || value == NULL) return DeleteFail;
 
-	int tableSize = table->size;
-	int listIndex = 0;
 	DeleteResult result = DeleteFail;
+	int listIndex = JHashTableGetHash(table, key);
+	if(listIndex == HASH_FAIL) return DeleteFail;
 
-	for( ; listIndex < tableSize; listIndex++)
-	{
-		//printf("Prev(%d) listSize:%d\n", listIndex, JLinkedListGetSize(table->listContainer[listIndex]));
-		result = JLinkedListDeleteNodeData(table->listContainer[listIndex], data);
-		//printf("After(%d) listSize:%d\n", listIndex, JLinkedListGetSize(table->listContainer[listIndex]));
-		if(result == DeleteSuccess) break;
-	}
-
-	return result;
+	return JLinkedListDeleteNodeData(table->listContainer[listIndex], value);
 }
 
 /**
@@ -612,28 +586,72 @@ DeleteResult JHashTableDeleteLastData(JHashTablePtr table)
 }
 
 /**
- * @fn FindResult JHashTableFindData(const JHashTablePtr table, void *data)
+ * @fn FindResult JHashTableFindData(const JHashTablePtr table, void *key, void *value)
  * @brief 해쉬 테이블에 저장된 데이터를 검색하는 함수
  * 데이터 검색 후 데이터는 반환하지 않고 존재 유무만 반환한다.
  * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
- * @param data 검색할 데이터의 주소(입력)
+ * @param key 검색할 키(입력)
+ * @param value 검색할 데이터(입력)
  * @return 성공 시 FindSuccess, 실패 시 FindFail 반환(FindResult 열거형 참고)
  */
-FindResult JHashTableFindData(const JHashTablePtr table, void *data)
+FindResult JHashTableFindData(const JHashTablePtr table, void *key, void *value)
 {
-	if(table == NULL || data == NULL) return FindFail;
+	if(table == NULL || key == NULL || value == NULL) return FindFail;
 
-	FindResult result = FindFail;
-	int tableSize = table->size;
-	int listIndex = 0;
+	int listIndex = JHashTableGetHash(table, key);
+	if(listIndex == HASH_FAIL) return FindFail;
 
-	for( ; listIndex < tableSize; listIndex++)
-	{
-		result = JLinkedListFindNodeData(table->listContainer[listIndex], data);
-		if(result == FindSuccess) break;
-	}
+	return JLinkedListFindNodeData(table->listContainer[listIndex], value);
+}
 
-	return result;
+/**
+ * @fn void JHashTablePrintAll(const JHashTablePtr table)
+ * @brief 해쉬 테이블에 저장된 모든 데이터들을 출력하는 함수
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @return 반환값 없음
+ */
+void JHashTablePrintAll(const JHashTablePtr table)
+{
+    if(table == NULL) return;
+
+    int isDataExist = 0;
+    int listIndex = 0;
+    int tableSize = table->size;
+    JNodePtr head = NULL;
+    JNodePtr tail = NULL;
+    JNodePtr node = NULL;
+
+    printf("------------------\n");
+    for( ; listIndex < tableSize; listIndex++)
+    {
+        head = table->listContainer[listIndex]->head;
+        tail = table->listContainer[listIndex]->tail;
+        node = head->next;
+
+        if(node == tail) isDataExist = -1;
+        else isDataExist = 1;
+
+        if(isDataExist == 1) printf("[ ");
+        while(node != tail)
+        {
+            switch(table->type)
+            {
+                case IntType:
+                    printf("%d ", *((int*)node->data));
+                    break;
+                case CharType:
+                    printf("%c ", *((char*)node->data));
+                    break;
+                case StringType:
+                    printf("%s ", ((char*)node->data));
+                    break;
+                default: return;
+            }
+            node = node->next;
+        }
+        if(isDataExist == 1) printf("]\n");
+    }
+    printf("------------------\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -687,5 +705,34 @@ static int HashString(const char* key, int hashSize)
 		value += (hashIndex * key[hashIndex]);
 	}
 	return value % hashSize;
+}
+
+/**
+ * @fn static int JHashTableGetHash(const JHashTablePtr table, void *key)
+ * @brief 해쉬 테이블의 해쉬 유형에 따라 지정한 키에 대한 해쉬값을 반환하는 함수 
+ * @param table 해쉬 테이블 구조체 객체의 주소(입력, 읽기 전용)
+ * @param key 해싱할 키(입력)
+ * @return 성공 시 해쉬값, 실패 시 HASH_FAIL(-1) 반환
+ */
+static int JHashTableGetHash(const JHashTablePtr table, void *key)
+{
+	int hash = 0;
+	int tableSize = table->size;
+
+	switch(table->type)
+	{
+		case IntType:
+			hash = table->intHashFunc(*((int*)key), tableSize);
+			break;
+		case CharType:
+			hash = table->charHashFunc(*((char*)key), tableSize);
+			break;
+		case StringType:
+			hash = table->stringHashFunc((char*)key, tableSize);
+			break;
+		default: return HASH_FAIL;
+	}
+
+	return hash;
 }
 
