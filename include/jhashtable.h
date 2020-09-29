@@ -71,8 +71,8 @@ typedef struct _jnode_t {
 
 // Hash Table value 를 관리하는 이중 연결 리스트 구조체
 typedef struct _jlinkedlist_t {
-	// Hash(Key 를 해쉬 테이블의 크기로 해싱한 값)
-	int index;
+	// 해쉬값(Key 를 해쉬 테이블의 크기로 해싱한 값)
+	int hash;
 	// 연결 리스트 전체 크기
 	int size;
 	// Head 노드

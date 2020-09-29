@@ -79,13 +79,15 @@ void* JNodeSetData(JNodePtr node, void *data)
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @fn JLinkedListPtr NewJLinkedList(int index)
+ * @fn JLinkedListPtr NewJLinkedList(int hash)
  * @brief 새로운 연결 리스트 구조체 객체를 생성하는 함수
- * @param index 해쉬 테이블에서 관리하는 연결 리스트의 인덱스 번호(입력)
+ * @param hash 해쉬 테이블에서 관리하는 해쉬값(입력)
  * @return 성공 시 생성된 연결 리스트 구조체 객체의 주소, 실패 시 NULL 반환
  */
-JLinkedListPtr NewJLinkedList(int index)
+JLinkedListPtr NewJLinkedList(int hash)
 {
+	if(hash < 0) return NULL;
+
 	JLinkedListPtr newList = (JLinkedListPtr)malloc(sizeof(JLinkedList));
 	if(newList == NULL)
 	{
@@ -112,7 +114,7 @@ JLinkedListPtr NewJLinkedList(int index)
 	newList->tail->prev = newList->head;
 	newList->tail->next = NULL;
 
-	newList->index = index;
+	newList->hash = hash;
 	newList->size = 0;
 	newList->data = NULL;
 
@@ -194,7 +196,7 @@ void* JLinkedListSetData(JLinkedListPtr list, void *data)
 }
 
 /**
- * @fn void* JLinkedListSetData(const JLinkedListPtr list, void *data)
+ * @fn JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
  * @brief 연결 리스트에 새로운 노드를 추가하는 함수
  * 중복 허용하지 않음
  * @param list 연결 리스트 구조체 객체의 주소(출력)
@@ -639,7 +641,7 @@ void JHashTablePrintAll(const JHashTablePtr table)
         if(node == tail) isDataExist = -1;
         else isDataExist = 1;
 
-        if(isDataExist == 1) printf("[ ");
+        if(isDataExist == 1) printf("(%d) [ ", table->listContainer[listIndex]->hash);
         while(node != tail)
         {
             switch(table->valueType)

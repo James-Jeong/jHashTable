@@ -30,6 +30,7 @@ TEST(ControlLinkedList, CreateAndDeleteLinkedList, {
 	EXPECT_NOT_NULL(list);
 	EXPECT_NUM_EQUAL(DeleteJLinkedList(&list), DeleteSuccess);
 
+	EXPECT_NULL(NewJLinkedList(-1));
 	EXPECT_NUM_EQUAL(DeleteJLinkedList(NULL), DeleteFail);
 })
 
@@ -970,11 +971,11 @@ TEST(ControlHashTable_STRING, DeleteLastData, {
 
 	JHashTableAddData(table, expectedKey1, expectedValue1);
 	JHashTableAddData(table, expectedKey2, expectedValue2);
-	//JHashTablePrintAll(table);
+	JHashTablePrintAll(table);
 
 	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
-	//JHashTablePrintAll(table);
+	JHashTablePrintAll(table);
 
 	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
 
@@ -1253,11 +1254,11 @@ TEST(ControlHashTable_CHAR_INT, DeleteFirstData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	//JHashTablePrintAll(table);
+	JHashTablePrintAll(table);
 
 	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
 	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2);
-	//JHashTablePrintAll(table);
+	JHashTablePrintAll(table);
 
 	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
 
