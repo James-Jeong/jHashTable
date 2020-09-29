@@ -57,7 +57,6 @@ typedef enum HashType
 typedef int (*_jhashInt_f)(int key, int hashSize);
 typedef int (*_jhashChar_f)(char key, int hashSize);
 typedef int (*_jhashString_f)(const char* key, int hashSize);
-typedef int (*_jcompare_f)(const void* v1, const void* v2);
 
 // Linked List 에서 data 를 관리하기 위한 노드 구조체
 typedef struct _jnode_t {
