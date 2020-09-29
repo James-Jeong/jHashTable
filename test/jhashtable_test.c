@@ -1616,6 +1616,310 @@ TEST(ControlHashTable_STRING_INT, FindData, {
 	DeleteJHashTable(&table);
 })
 
+// ---------- Hash char & string Test ----------
+
+////////////////////////////////////////////////////////////////////////////////
+/// HashTable Test (char & string)
+////////////////////////////////////////////////////////////////////////////////
+
+TEST(ControlHashTable_CHAR_STRING, AddData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char *expectedValue1 = "abc";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+	EXPECT_NOT_NULL(JHashTableAddData(table, &expectedKey1, expectedValue1));
+
+	EXPECT_NULL(JHashTableAddData(NULL, &expectedKey1, expectedValue1));
+	EXPECT_NULL(JHashTableAddData(NULL, &expectedKey1, NULL));
+	EXPECT_NULL(JHashTableAddData(NULL, NULL, expectedValue1));
+	EXPECT_NULL(JHashTableAddData(table, NULL, NULL));
+	EXPECT_NULL(JHashTableAddData(table, &expectedKey1, NULL));
+	EXPECT_NULL(JHashTableAddData(table, NULL, expectedValue1));
+	EXPECT_NULL(JHashTableAddData(NULL, NULL, NULL));
+	
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, GetFirstData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	EXPECT_STR_EQUAL((char*)JHashTableGetFirstData(table), expectedValue1);
+
+	EXPECT_NULL(JHashTableGetFirstData(NULL));
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, GetLastData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue2);
+
+	EXPECT_NULL(JHashTableGetLastData(NULL));
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, DeleteData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, expectedValue2), DeleteSuccess);
+	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, DeleteFirstData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_STR_EQUAL((char*)JHashTableGetFirstData(table), expectedValue2);
+	JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, DeleteLastData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_CHAR_STRING, FindData, {
+	int size = 10;
+	char expectedKey1 = 'a';
+	char* expectedValue1 = "abc";
+	char expectedKey2 = 'b';
+	char* expectedValue2 = "def";
+	JHashTablePtr table = NewJHashTable(size, CharType, StringType);
+
+	JHashTableAddData(table, &expectedKey1, expectedValue1);
+	JHashTableAddData(table, &expectedKey2, expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, expectedValue1), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, expectedValue2), FindSuccess);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+
+	DeleteJHashTable(&table);
+})
+
+////////////////////////////////////////////////////////////////////////////////
+/// HashTable Test (string & char)
+////////////////////////////////////////////////////////////////////////////////
+
+TEST(ControlHashTable_STRING_CHAR, AddData, {
+	int size = 10;
+	char* expectedKey1 = "abc";
+	char expectedValue1 = 'd';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+	EXPECT_NOT_NULL(JHashTableAddData(table, expectedKey1, &expectedValue1));
+
+	EXPECT_NULL(JHashTableAddData(NULL, expectedKey1, &expectedValue1));
+	EXPECT_NULL(JHashTableAddData(NULL, expectedKey1, NULL));
+	EXPECT_NULL(JHashTableAddData(NULL, NULL, &expectedValue1));
+	EXPECT_NULL(JHashTableAddData(table, NULL, NULL));
+	EXPECT_NULL(JHashTableAddData(table, expectedKey1, NULL));
+	EXPECT_NULL(JHashTableAddData(table, NULL, &expectedValue1));
+	EXPECT_NULL(JHashTableAddData(NULL, NULL, NULL));
+	
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, GetFirstData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1);
+
+	EXPECT_NULL(JHashTableGetFirstData(NULL));
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, GetLastData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2);
+
+	EXPECT_NULL(JHashTableGetLastData(NULL));
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, DeleteData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, &expectedValue2), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, &expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, DeleteFirstData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, DeleteLastData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+
+	DeleteJHashTable(&table);
+})
+
+TEST(ControlHashTable_STRING_CHAR, FindData, {
+	int size = 10;
+	char *expectedKey1 = "def";
+	char expectedValue1 = 'x';
+	char *expectedKey2 = "abc";
+	char expectedValue2 = 'y';
+	JHashTablePtr table = NewJHashTable(size, StringType, CharType);
+
+	JHashTableAddData(table, expectedKey1, &expectedValue1);
+	JHashTableAddData(table, expectedKey2, &expectedValue2);
+	//JHashTablePrintAll(table);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, &expectedValue1), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, &expectedValue2), FindSuccess);
+
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, &expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+
+	DeleteJHashTable(&table);
+})
+
 ////////////////////////////////////////////////////////////////////////////////
 /// Main Function
 ////////////////////////////////////////////////////////////////////////////////
@@ -1721,11 +2025,23 @@ int main()
 		Test_ControlHashTable_STRING_INT_DeleteData,
 		Test_ControlHashTable_STRING_INT_DeleteFirstData,
 		Test_ControlHashTable_STRING_INT_DeleteLastData,
-		Test_ControlHashTable_STRING_INT_FindData
+		Test_ControlHashTable_STRING_INT_FindData,
 		// # CHAR & STRING
-
+		Test_ControlHashTable_CHAR_STRING_AddData,
+		Test_ControlHashTable_CHAR_STRING_GetFirstData,
+		Test_ControlHashTable_CHAR_STRING_GetLastData,
+		Test_ControlHashTable_CHAR_STRING_DeleteData,
+		Test_ControlHashTable_CHAR_STRING_DeleteFirstData,
+		Test_ControlHashTable_CHAR_STRING_DeleteLastData,
+		Test_ControlHashTable_CHAR_STRING_FindData,
 		// # STRING & CHAR
-
+		Test_ControlHashTable_STRING_CHAR_AddData,
+		Test_ControlHashTable_STRING_CHAR_GetFirstData,
+		Test_ControlHashTable_STRING_CHAR_GetLastData,
+		Test_ControlHashTable_STRING_CHAR_DeleteData,
+		Test_ControlHashTable_STRING_CHAR_DeleteFirstData,
+		Test_ControlHashTable_STRING_CHAR_DeleteLastData,
+		Test_ControlHashTable_STRING_CHAR_FindData
     );
 
     RUN_ALL_TESTS();
