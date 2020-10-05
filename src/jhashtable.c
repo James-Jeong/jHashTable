@@ -148,8 +148,7 @@ DeleteResult DeleteJLinkedList(JLinkedListPtrContainer container)
 		node = nextNode;
 	}
 
-	if(DeleteJNode(&((*container)->head)) == DeleteFail) return DeleteFail;
-	if(DeleteJNode(&((*container)->tail)) == DeleteFail) return DeleteFail;
+	if((DeleteJNode(&((*container)->head)) == DeleteFail) || (DeleteJNode(&((*container)->tail)) == DeleteFail)) return DeleteFail;
 
 	free(*container);
 	*container = NULL;
@@ -337,9 +336,7 @@ FindResult JLinkedListFindNodeData(const JLinkedListPtr list, void *data)
  */
 JHashTablePtr NewJHashTable(int size, HashType keyType, HashType valueType)
 {
-	if(size <= 0) return NULL;
-	if(CheckHashType(keyType) == Unknown) return NULL;
-	if(CheckHashType(valueType) == Unknown) return NULL;
+	if((size <= 0) || (CheckHashType(keyType) == Unknown) || (CheckHashType(valueType) == Unknown)) return NULL;
 
     JHashTablePtr newHashTable = (JHashTablePtr)malloc(sizeof(JHashTable));
     if(newHashTable == NULL)  return NULL;
