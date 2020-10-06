@@ -204,8 +204,7 @@ void* JLinkedListSetData(JLinkedListPtr list, void *data)
  */
 JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
 {
-	if(list == NULL || data == NULL) return NULL;
-	if(JLinkedListFindNodeData(list, data) == FindSuccess) return NULL;
+	if((list == NULL || data == NULL) || (JLinkedListFindNodeData(list, data) == FindSuccess)) return NULL;
 
 	JNodePtr newNode = NewJNode();
 	if(JNodeSetData(newNode, data) == NULL) return NULL;
@@ -242,8 +241,7 @@ JLinkedListPtr JLinkedListAddNode(JLinkedListPtr list, void *data)
  */
 void* JLinkedListGetFirstNodeData(const JLinkedListPtr list)
 {
-	if(list == NULL) return NULL;
-	if(list->head->next == list->tail) return NULL;
+	if((list == NULL) || (list->head->next == list->tail)) return NULL;
 	return JNodeGetData(list->head->next);
 }
 
@@ -255,9 +253,7 @@ void* JLinkedListGetFirstNodeData(const JLinkedListPtr list)
  */
 void* JLinkedListGetLastNodeData(const JLinkedListPtr list)
 {
-	if(list == NULL) return NULL;
-	if(list->tail->prev == list->head) return NULL;
-
+	if((list == NULL) || (list->tail->prev == list->head)) return NULL;
 	return JNodeGetData(list->tail->prev);
 }
 
@@ -425,16 +421,15 @@ HashType JHashTableGetType(const JHashTablePtr table)
 }
 
 /**
- * @fn JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType)
+ * @fn JHashTablePtr JHashTableSetType(JHashTablePtr table, DataType dataType, HashType hashType)
  * @brief 해쉬 테이블의 해쉬 유형을 변경하는 함수
  * @param table 해쉬 테이블 구조체 객체의 주소(출력)
  * @param valueType 변경할 해쉬 유형(입력, HashType 열거형 참고)
  * @return 성공 시 해쉬 테이블 구조체의 주소, 실패 시 NULL 반환
  */
-JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType)
+JHashTablePtr JHashTableSetType(JHashTablePtr table, DataType dataType, HashType hashType)
 {
-	if(table == NULL) return NULL;
-	if(CheckHashType(hashType) == Unknown) return NULL;
+	if((table == NULL) || (CheckHashType(hashType) == Unknown)) return NULL;
 
 	switch(dataType)
 	{

@@ -91,19 +91,19 @@ TEST(HashTable, ChangeHashType, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
 
-	EXPECT_NOT_NULL(JHashTableChangeType(table, Key, StringType));
+	EXPECT_NOT_NULL(JHashTableSetType(table, Key, StringType));
 	EXPECT_NUM_EQUAL(table->keyType, StringType);
 
-	EXPECT_NOT_NULL(JHashTableChangeType(table, Value, CharType));
+	EXPECT_NOT_NULL(JHashTableSetType(table, Value, CharType));
 	EXPECT_NUM_EQUAL(table->valueType, CharType);
 
-	EXPECT_NULL(JHashTableChangeType(NULL, Key, StringType));
-	EXPECT_NULL(JHashTableChangeType(NULL, Key, 123));
-	EXPECT_NULL(JHashTableChangeType(NULL, 456, StringType));
-	EXPECT_NULL(JHashTableChangeType(NULL, 456, 123));
-	EXPECT_NULL(JHashTableChangeType(table, Value, 123));
-	EXPECT_NULL(JHashTableChangeType(table, 456, CharType));
-	EXPECT_NULL(JHashTableChangeType(table, 456, 123));
+	EXPECT_NULL(JHashTableSetType(NULL, Key, StringType));
+	EXPECT_NULL(JHashTableSetType(NULL, Key, 123));
+	EXPECT_NULL(JHashTableSetType(NULL, 456, StringType));
+	EXPECT_NULL(JHashTableSetType(NULL, 456, 123));
+	EXPECT_NULL(JHashTableSetType(table, Value, 123));
+	EXPECT_NULL(JHashTableSetType(table, 456, CharType));
+	EXPECT_NULL(JHashTableSetType(table, 456, 123));
 
 	DeleteJHashTable(&table);
 })

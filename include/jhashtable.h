@@ -135,7 +135,7 @@ DeleteResult DeleteJHashTable(JHashTablePtrContainer container);
 
 int JHashTableGetSize(const JHashTablePtr table);
 int JHashTableGetType(const JHashTablePtr table);
-JHashTablePtr JHashTableChangeType(JHashTablePtr table, DataType dataType, HashType hashType);
+JHashTablePtr JHashTableSetType(JHashTablePtr table, DataType dataType, HashType hashType);
 JHashTablePtr JHashTableAddData(JHashTablePtr table, void *key, void *value);
 
 void* JHashTableGetFirstData(const JHashTablePtr table);
