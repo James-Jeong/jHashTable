@@ -87,7 +87,7 @@ TEST(HashTable, GetType, {
 	DeleteJHashTable(&table);
 })
 
-TEST(HashTable, ChangeHashType, {
+TEST(HashTable, SetType, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
 
@@ -1958,7 +1958,7 @@ int main()
 		Test_HashTable_CreateAndDeleteHashTable,
 		Test_HashTable_GetSize,
 		Test_HashTable_GetType,
-		Test_HashTable_ChangeHashType,
+		Test_HashTable_SetType,
 
 		// @ INT Test -------------------------------------------
 		Test_Node_INT_SetData,
