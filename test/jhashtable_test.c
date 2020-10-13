@@ -16,9 +16,9 @@ DECLARE_TEST();
 TEST(Node, CreateAndDeleteNode, {
 	JNodePtr node = NewJNode();
 	EXPECT_NOT_NULL(node);
-	EXPECT_NUM_EQUAL(DeleteJNode(&node), DeleteSuccess);
+	EXPECT_NUM_EQUAL(DeleteJNode(&node), DeleteSuccess, int);
 
-	EXPECT_NUM_EQUAL(DeleteJNode(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(DeleteJNode(NULL), DeleteFail, int);
 })
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,10 +28,10 @@ TEST(Node, CreateAndDeleteNode, {
 TEST(LinkedList, CreateAndDeleteLinkedList, {
 	JLinkedListPtr list = NewJLinkedList(0);
 	EXPECT_NOT_NULL(list);
-	EXPECT_NUM_EQUAL(DeleteJLinkedList(&list), DeleteSuccess);
+	EXPECT_NUM_EQUAL(DeleteJLinkedList(&list), DeleteSuccess, int);
 
 	EXPECT_NULL(NewJLinkedList(-1));
-	EXPECT_NUM_EQUAL(DeleteJLinkedList(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(DeleteJLinkedList(NULL), DeleteFail, int);
 })
 
 TEST(LinkedList, GetSize, {
@@ -43,9 +43,9 @@ TEST(LinkedList, GetSize, {
 	JLinkedListAddNode(list, &expected1);
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
-	EXPECT_NUM_EQUAL(JLinkedListGetSize(list), 3);
+	EXPECT_NUM_EQUAL(JLinkedListGetSize(list), 3, int);
 
-	EXPECT_NUM_EQUAL(JLinkedListGetSize(NULL), -1);
+	EXPECT_NUM_EQUAL(JLinkedListGetSize(NULL), -1, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -58,7 +58,7 @@ TEST(HashTable, CreateAndDeleteHashTable, {
 	int size = 10;
 	JHashTablePtr table = NewJHashTable(size, IntType, IntType);
 	EXPECT_NOT_NULL(table);
-	EXPECT_NUM_EQUAL(DeleteJHashTable(&table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(DeleteJHashTable(&table), DeleteSuccess, int);
 
 	EXPECT_NULL(NewJHashTable(-1, IntType, IntType));
 	EXPECT_NULL(NewJHashTable(0, IntType, IntType));
@@ -69,13 +69,13 @@ TEST(HashTable, CreateAndDeleteHashTable, {
 	EXPECT_NULL(NewJHashTable(0, 123, IntType));
 	EXPECT_NULL(NewJHashTable(0, IntType, 456));
 
-	EXPECT_NUM_EQUAL(DeleteJHashTable(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(DeleteJHashTable(NULL), DeleteFail, int);
 })
 
 TEST(HashTable, GetSize, {
 	int expected = 10;
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
-	EXPECT_NUM_EQUAL(JHashTableGetSize(table), expected);
+	EXPECT_NUM_EQUAL(JHashTableGetSize(table), expected, int);
 	DeleteJHashTable(&table);
 })
 
@@ -83,7 +83,7 @@ TEST(HashTable, GetType, {
 	int size = 10;
 	HashType expected = IntType;
 	JHashTablePtr table = NewJHashTable(size, IntType, IntType);
-	EXPECT_NUM_EQUAL(JHashTableGetType(table), expected);
+	EXPECT_NUM_EQUAL(JHashTableGetType(table), expected, int);
 	DeleteJHashTable(&table);
 })
 
@@ -92,10 +92,10 @@ TEST(HashTable, SetType, {
 	JHashTablePtr table = NewJHashTable(expected, IntType, IntType);
 
 	EXPECT_NOT_NULL(JHashTableSetType(table, Key, StringType));
-	EXPECT_NUM_EQUAL(table->keyType, StringType);
+	EXPECT_NUM_EQUAL(table->keyType, StringType, int);
 
 	EXPECT_NOT_NULL(JHashTableSetType(table, Value, CharType));
-	EXPECT_NUM_EQUAL(table->valueType, CharType);
+	EXPECT_NUM_EQUAL(table->valueType, CharType, int);
 
 	EXPECT_NULL(JHashTableSetType(NULL, Key, StringType));
 	EXPECT_NULL(JHashTableSetType(NULL, Key, 123));
@@ -120,7 +120,7 @@ TEST(Node_INT, SetData, {
 	int expected = 5;
 	EXPECT_NOT_NULL(JNodeSetData(node, &expected));
 	EXPECT_PTR_EQUAL(node->data, &expected);
-	EXPECT_NUM_EQUAL(*((int*)(node->data)), expected);
+	EXPECT_NUM_EQUAL(*((int*)(node->data)), expected, int);
 
 	EXPECT_NULL(JNodeSetData(NULL, &expected));
 	EXPECT_NULL(JNodeSetData(node, NULL));
@@ -135,7 +135,7 @@ TEST(Node_INT, GetData, {
 	int expected = 5;
 	JNodeSetData(node, &expected);
 	EXPECT_NOT_NULL(JNodeGetData(node));
-	EXPECT_NUM_EQUAL(*((int*)JNodeGetData(node)), expected);
+	EXPECT_NUM_EQUAL(*((int*)JNodeGetData(node)), expected, int);
 
 	EXPECT_NULL(JNodeGetData(NULL));
 
@@ -152,7 +152,7 @@ TEST(LinkedList_INT, AddNode, {
 
 	// 정상 동작 확인
 	EXPECT_NOT_NULL(JLinkedListAddNode(list, &expected));
-	EXPECT_NUM_EQUAL(*((int*)(list->tail->prev->data)), expected);
+	EXPECT_NUM_EQUAL(*((int*)(list->tail->prev->data)), expected, int);
 
 	// 중복 허용 테스트
 	EXPECT_NULL(JLinkedListAddNode(list, &expected));
@@ -176,7 +176,7 @@ TEST(LinkedList_INT, GetFirstNodeData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetFirstNodeData(list)), expected1);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetFirstNodeData(list)), expected1, int);
 
 	EXPECT_NULL(JLinkedListGetFirstNodeData(NULL));
 
@@ -194,7 +194,7 @@ TEST(LinkedList_INT, GetLastNodeData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetLastNodeData(list)), expected3);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetLastNodeData(list)), expected3, int);
 	
 	EXPECT_NULL(JLinkedListGetLastNodeData(NULL));
 
@@ -206,7 +206,7 @@ TEST(LinkedList_INT, SetData, {
 	int expected = 5;
 
 	EXPECT_NOT_NULL(JLinkedListSetData(list, &expected));
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetData(list)), expected);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetData(list)), expected, int);
 
 	EXPECT_NULL(JLinkedListSetData(NULL, &expected));
 	EXPECT_NULL(JLinkedListSetData(list, NULL));
@@ -221,7 +221,7 @@ TEST(LinkedList_INT, GetData, {
 
 	JLinkedListSetData(list, &expected);
 	EXPECT_NOT_NULL(JLinkedListGetData(list));
-	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetData(list)), 5);
+	EXPECT_NUM_EQUAL(*((int*)JLinkedListGetData(list)), 5, int);
 
 	EXPECT_NULL(JLinkedListGetData(NULL));
 
@@ -233,12 +233,12 @@ TEST(LinkedList_INT, DeleteNodeData, {
 	int expected1 = 5;
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, &expected1), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, &expected1), DeleteSuccess, int);
 	EXPECT_NULL(JLinkedListGetLastNodeData(list));
 
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, &expected1), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, &expected1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -248,11 +248,11 @@ TEST(LinkedList_INT, FindNodeData, {
 	int expected1 = 5;
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, &expected1), FindSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, &expected1), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, &expected1), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, &expected1), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -291,7 +291,7 @@ TEST(HashTable_INT, GetFirstData, {
 	JHashTableAddData(table, &expectedKey1, &expectedValue1_1);
 	JHashTableAddData(table, &expectedKey1, &expectedValue1_2);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1_1);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1_1, int);
 	JHashTablePrintAll(table);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
@@ -311,7 +311,7 @@ TEST(HashTable_INT, GetLastData, {
 	JHashTableAddData(table, &expectedKey1, &expectedValue1_1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2_1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2_2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2_2);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2_2, int);
 	JHashTablePrintAll(table);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
@@ -331,17 +331,17 @@ TEST(HashTable_INT, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -358,11 +358,11 @@ TEST(HashTable_INT, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -379,11 +379,11 @@ TEST(HashTable_INT, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -400,16 +400,16 @@ TEST(HashTable_INT, FindData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -426,7 +426,7 @@ TEST(Node_CHAR, SetData, {
 	char expected = 'a';
 	EXPECT_NOT_NULL(JNodeSetData(node, &expected));
 	EXPECT_PTR_EQUAL(node->data, &expected);
-	EXPECT_NUM_EQUAL(*((char*)(node->data)), expected);
+	EXPECT_NUM_EQUAL(*((char*)(node->data)), expected, int);
 
 	EXPECT_NULL(JNodeSetData(NULL, &expected));
 	EXPECT_NULL(JNodeSetData(node, NULL));
@@ -441,7 +441,7 @@ TEST(Node_CHAR, GetData, {
 	char expected = 'a';
 	JNodeSetData(node, &expected);
 	EXPECT_NOT_NULL(JNodeGetData(node));
-	EXPECT_NUM_EQUAL(*((char*)JNodeGetData(node)), expected);
+	EXPECT_NUM_EQUAL(*((char*)JNodeGetData(node)), expected, int);
 
 	EXPECT_NULL(JNodeGetData(NULL));
 
@@ -458,7 +458,7 @@ TEST(LinkedList_CHAR, AddNode, {
 
 	// 정상 동작 확인
 	EXPECT_NOT_NULL(JLinkedListAddNode(list, &expected));
-	EXPECT_NUM_EQUAL(*((char*)(list->tail->prev->data)), expected);
+	EXPECT_NUM_EQUAL(*((char*)(list->tail->prev->data)), expected, int);
 
 	// 중복 허용 테스트
 	EXPECT_NULL(JLinkedListAddNode(list, &expected));
@@ -482,7 +482,7 @@ TEST(LinkedList_CHAR, GetFirstNodeData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetFirstNodeData(list)), expected1);
+	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetFirstNodeData(list)), expected1, int);
 
 	EXPECT_NULL(JLinkedListGetFirstNodeData(NULL));
 
@@ -500,7 +500,7 @@ TEST(LinkedList_CHAR, GetLastNodeData, {
 	JLinkedListAddNode(list, &expected2);
 	JLinkedListAddNode(list, &expected3);
 
-	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetLastNodeData(list)), expected3);
+	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetLastNodeData(list)), expected3, int);
 	
 	EXPECT_NULL(JLinkedListGetLastNodeData(NULL));
 
@@ -512,7 +512,7 @@ TEST(LinkedList_CHAR, SetData, {
 	char expected = 'a';
 
 	EXPECT_NOT_NULL(JLinkedListSetData(list, &expected));
-	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetData(list)), expected);
+	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetData(list)), expected, int);
 
 	EXPECT_NULL(JLinkedListSetData(NULL, &expected));
 	EXPECT_NULL(JLinkedListSetData(list, NULL));
@@ -527,7 +527,7 @@ TEST(LinkedList_CHAR, GetData, {
 
 	JLinkedListSetData(list, &expected);
 	EXPECT_NOT_NULL(JLinkedListGetData(list));
-	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetData(list)), expected);
+	EXPECT_NUM_EQUAL(*((char*)JLinkedListGetData(list)), expected, int);
 
 	EXPECT_NULL(JLinkedListGetData(NULL));
 
@@ -539,12 +539,12 @@ TEST(LinkedList_CHAR, DeleteNodeData, {
 	char expected1 = 'a';
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, &expected1), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, &expected1), DeleteSuccess, int);
 	EXPECT_NULL(JLinkedListGetLastNodeData(list));
 
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, &expected1), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, &expected1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -554,11 +554,11 @@ TEST(LinkedList_CHAR, FindNodeData, {
 	char expected1 = 'a';
 
 	JLinkedListAddNode(list, &expected1);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, &expected1), FindSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, &expected1), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, &expected1), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, &expected1), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -595,7 +595,7 @@ TEST(HashTable_CHAR, GetFirstData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1, int);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
 
@@ -612,7 +612,7 @@ TEST(HashTable_CHAR, GetLastData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2, int);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
 
@@ -631,17 +631,17 @@ TEST(HashTable_CHAR, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -658,11 +658,11 @@ TEST(HashTable_CHAR, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue2, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -679,11 +679,11 @@ TEST(HashTable_CHAR, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -700,16 +700,16 @@ TEST(HashTable_CHAR, FindData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -839,12 +839,12 @@ TEST(LinkedList_STRING, DeleteNodeData, {
 	char *expected1 = "abc";
 
 	JLinkedListAddNode(list, expected1);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, expected1), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, expected1), DeleteSuccess, int);
 	EXPECT_NULL(JLinkedListGetLastNodeData(list));
 
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, expected1), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, expected1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(list, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListDeleteNodeData(NULL, NULL), DeleteFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -854,11 +854,11 @@ TEST(LinkedList_STRING, FindNodeData, {
 	char *expected1 = "abc";
 
 	JLinkedListAddNode(list, expected1);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, expected1), FindSuccess);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, expected1), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, expected1), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, expected1), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(list, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JLinkedListFindNodeData(NULL, NULL), FindFail, int);
 
 	DeleteJLinkedList(&list);
 })
@@ -931,17 +931,17 @@ TEST(HashTable_STRING, DeleteData, {
 	JHashTableAddData(table, expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, expectedValue2), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, expectedValue2), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -958,11 +958,11 @@ TEST(HashTable_STRING, DeleteFirstData, {
 	JHashTableAddData(table, expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetFirstData(table), expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -979,11 +979,11 @@ TEST(HashTable_STRING, DeleteLastData, {
 	JHashTableAddData(table, expectedKey2, expectedValue2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1000,16 +1000,16 @@ TEST(HashTable_STRING, FindData, {
 	JHashTableAddData(table, expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1048,7 +1048,7 @@ TEST(HashTable_INT_CHAR, GetFirstData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1, int);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
 
@@ -1065,7 +1065,7 @@ TEST(HashTable_INT_CHAR, GetLastData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2, int);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
 
@@ -1084,17 +1084,17 @@ TEST(HashTable_INT_CHAR, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1111,11 +1111,11 @@ TEST(HashTable_INT_CHAR, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue2, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1132,11 +1132,11 @@ TEST(HashTable_INT_CHAR, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1153,16 +1153,16 @@ TEST(HashTable_INT_CHAR, FindData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1199,7 +1199,7 @@ TEST(HashTable_CHAR_INT, GetFirstData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1, int);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
 
@@ -1216,7 +1216,7 @@ TEST(HashTable_CHAR_INT, GetLastData, {
 
 	JHashTableAddData(table, &expectedKey1, &expectedValue1);
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2, int);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
 
@@ -1235,17 +1235,17 @@ TEST(HashTable_CHAR_INT, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1262,11 +1262,11 @@ TEST(HashTable_CHAR_INT, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2, int);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1283,11 +1283,11 @@ TEST(HashTable_CHAR_INT, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1304,16 +1304,16 @@ TEST(HashTable_CHAR_INT, FindData, {
 	JHashTableAddData(table, &expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1388,17 +1388,17 @@ TEST(HashTable_INT_STRING, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, expectedValue2), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, expectedValue2), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1415,11 +1415,11 @@ TEST(HashTable_INT_STRING, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetFirstData(table), expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1436,11 +1436,11 @@ TEST(HashTable_INT_STRING, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1457,16 +1457,16 @@ TEST(HashTable_INT_STRING, FindData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1503,7 +1503,7 @@ TEST(HashTable_STRING_INT, GetFirstData, {
 
 	JHashTableAddData(table, expectedKey1, &expectedValue1);
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue1, int);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
 
@@ -1520,7 +1520,7 @@ TEST(HashTable_STRING_INT, GetLastData, {
 
 	JHashTableAddData(table, expectedKey1, &expectedValue1);
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue2, int);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
 
@@ -1539,17 +1539,17 @@ TEST(HashTable_STRING_INT, DeleteData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1566,11 +1566,11 @@ TEST(HashTable_STRING_INT, DeleteFirstData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetFirstData(table)), expectedValue2, int);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1587,11 +1587,11 @@ TEST(HashTable_STRING_INT, DeleteLastData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((int*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1608,16 +1608,16 @@ TEST(HashTable_STRING_INT, FindData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1692,17 +1692,17 @@ TEST(HashTable_CHAR_STRING, DeleteData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, expectedValue2), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey2, expectedValue2), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue1);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, &expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1723,11 +1723,11 @@ TEST(HashTable_CHAR_STRING, DeleteFirstData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetFirstData(table), expectedValue1_2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1748,11 +1748,11 @@ TEST(HashTable_CHAR_STRING, DeleteLastData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2_3);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
 	EXPECT_STR_EQUAL((char*)JHashTableGetLastData(table), expectedValue2_2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1769,16 +1769,16 @@ TEST(HashTable_CHAR_STRING, FindData, {
 	JHashTableAddData(table, &expectedKey2, expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey2, expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, &expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1815,7 +1815,7 @@ TEST(HashTable_STRING_CHAR, GetFirstData, {
 
 	JHashTableAddData(table, expectedKey1, &expectedValue1);
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1, int);
 
 	EXPECT_NULL(JHashTableGetFirstData(NULL));
 
@@ -1832,7 +1832,7 @@ TEST(HashTable_STRING_CHAR, GetLastData, {
 
 	JHashTableAddData(table, expectedKey1, &expectedValue1);
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2, int);
 
 	EXPECT_NULL(JHashTableGetLastData(NULL));
 
@@ -1851,17 +1851,17 @@ TEST(HashTable_STRING_CHAR, DeleteData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, &expectedValue2), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey2, &expectedValue2), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue1, int);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail);
-	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, expectedKey1, NULL), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(table, NULL, &expectedValue1), DeleteFail, int);
+	EXPECT_NUM_EQUAL(JHashTableDeleteData(NULL, NULL, NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1882,11 +1882,11 @@ TEST(HashTable_STRING_CHAR, DeleteFirstData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1_2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetFirstData(table)), expectedValue1_2, int);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteFirstData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1907,11 +1907,11 @@ TEST(HashTable_STRING_CHAR, DeleteLastData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2_3);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess);
-	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2_2);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(table), DeleteSuccess, int);
+	EXPECT_NUM_EQUAL(*((char*)JHashTableGetLastData(table)), expectedValue2_2, int);
 	JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail);
+	EXPECT_NUM_EQUAL(JHashTableDeleteLastData(NULL), DeleteFail, int);
 
 	DeleteJHashTable(&table);
 })
@@ -1928,16 +1928,16 @@ TEST(HashTable_STRING_CHAR, FindData, {
 	JHashTableAddData(table, expectedKey2, &expectedValue2);
 	//JHashTablePrintAll(table);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, &expectedValue1), FindSuccess);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, &expectedValue2), FindSuccess);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, &expectedValue1), FindSuccess, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey2, &expectedValue2), FindSuccess, int);
 
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail);
-	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, expectedKey1, NULL), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(table, NULL, &expectedValue1), FindFail, int);
+	EXPECT_NUM_EQUAL(JHashTableFindData(NULL, NULL, NULL), FindFail, int);
 
 	DeleteJHashTable(&table);
 })
